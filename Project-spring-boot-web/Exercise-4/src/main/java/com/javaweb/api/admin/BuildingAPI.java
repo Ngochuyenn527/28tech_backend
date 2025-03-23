@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController(value = "buildingAPIOfAdmin")
-@RequestMapping("/api/building")
+@RequestMapping("/api/building/")
+@CrossOrigin
 public class BuildingAPI {
 
     @Autowired

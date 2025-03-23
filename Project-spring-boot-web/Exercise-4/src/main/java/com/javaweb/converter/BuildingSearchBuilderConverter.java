@@ -9,9 +9,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 
-//@Component → Spring sẽ tự động quản lý class này như một bean, giúp ta có thể inject nó vào các component khác mà không cần tự tạo instance.
+//@Component
 @Component
-//➡️ Converter để chuyển Map<String, Object> thành BuildingSearchBuilder (dùng cho tìm kiếm).
+
+// chuyển những giá trị của BuildingSearchRequest cần tìm kiếm thành BuildingSearchBuilder để giải quyết vấn đề Constructor có quá nhiều tham số
+// (có thể tham khảo builder pattern để hiểu rõ hơn)
 public class BuildingSearchBuilderConverter {
     public BuildingSearchBuilder toBuildingSearchBuilder(BuildingSearchRequest buildingSearchRequest, List<String> typeCode) {
         BuildingSearchBuilder buildingSearchBuilder = new BuildingSearchBuilder.Builder()

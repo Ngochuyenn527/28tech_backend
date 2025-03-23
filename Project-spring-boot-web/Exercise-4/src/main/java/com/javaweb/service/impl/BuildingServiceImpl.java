@@ -17,15 +17,13 @@ import java.util.List;
 
 @Service
 public class BuildingServiceImpl implements BuildingService {
-    //Inject BuildingRepository → Dùng để truy vấn dữ liệu từ database.
+
     @Autowired
     private BuildingRepository buildingRepository;
 
-    //Inject BuildingDTOConverter → Dùng để chuyển đổi dữ liệu từ BuildingEntity → BuildingDTO.
     @Autowired
     private BuildingSearchResponseConverter buildingSearchResponseConverter;
 
-    //Inject BuildingSearchBuilderConverter → Dùng để chuyển Map<String, Object> thành BuildingSearchBuilder.
     @Autowired
     private BuildingSearchBuilderConverter buildingSearchBuilderConverter;
 
@@ -34,8 +32,9 @@ public class BuildingServiceImpl implements BuildingService {
 
         List<String> typeCode = buildingSearchRequest.getTypeCode();
 
-        //Chuyển dữ liệu tìm kiếm thành BuildingSearchBuilder
+        //Chuyển dữ liệu tìm kiếm BuildingSearchRequest thành BuildingSearchBuilder
         BuildingSearchBuilder buildingSearchBuilder = buildingSearchBuilderConverter.toBuildingSearchBuilder(buildingSearchRequest, typeCode);
+
         //Gọi Repository để lấy danh sách tòa nhà
         List<BuildingEntity> buildingEntities = buildingRepository.searchBuildings(buildingSearchBuilder);
 

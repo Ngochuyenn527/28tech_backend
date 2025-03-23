@@ -3,6 +3,7 @@ package com.javaweb.model.response;
 
 import com.javaweb.model.dto.AbstractDTO;
 
+
 //trả ra bảng dữ liệu tìm kiếm được (bảng 2)
 public class BuildingSearchResponse extends AbstractDTO {
     private Long id;

@@ -67,8 +67,6 @@ public class BuildingController {
         mav.addObject("buildingList", buildingSearchResponse);
 
         // Truyền danh sách quận và loại hình tòa nhà (tránh null)
-//        mav.addObject("districts", District.districtMap() != null ? District.districtMap() : new HashMap<>());
-//        mav.addObject("typeCodes", TypeCode.typeCodeMap() != null ? TypeCode.typeCodeMap() : new HashMap<>());
         mav.addObject("districts", District.districtMap()); //Truyền danh sách quận đến View để hiển thị.
         mav.addObject("typeCodes", TypeCode.typeCodeMap());
 
