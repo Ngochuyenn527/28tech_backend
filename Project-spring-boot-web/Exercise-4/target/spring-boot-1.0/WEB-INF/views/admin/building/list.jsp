@@ -220,7 +220,7 @@
                         <form:form modelAttribute="buildingList">
                             <display:table name="${buildingList}" cellspacing="0" cellpadding="0"
                                            requestURI="${buildingListURL}" partialList="true" sort="external"
-                                           size="${fn:length(buildingList)}" defaultsort="2" defaultorder="ascending"
+                                           size="${buildingList.totalItems}" defaultsort="2" defaultorder="ascending"
                                            id="tableList"
                                            export="false"
                                            class="table table-fcv-ace table-striped table-bordered table-hover dataTable no-footer"
