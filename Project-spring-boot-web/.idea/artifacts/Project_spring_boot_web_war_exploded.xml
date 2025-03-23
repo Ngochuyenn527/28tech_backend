@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Project-spring-boot-web:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/Project_spring_boot_web_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="Project-spring-boot-web/web/Web" />
+    </root>
+  </artifact>
+</component>
