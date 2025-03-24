@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.javaweb.utils.*;
 
 import javax.transaction.Transactional;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -95,9 +96,15 @@ public class BuildingServiceImpl implements BuildingService {
         return true;
     }
 
+//    public static String removeAccent(List<String> typeCodes) {
+//        String s = String.join(",", typeCodes);
+//        return s;
+//    }
+
     public static String removeAccent(List<String> typeCodes) {
         String s = String.join(",", typeCodes);
-        return s;
+        return Normalizer.normalize(s, Normalizer.Form.NFD) // Chuyển thành dạng decomposed
+                .replaceAll("\\p{M}", ""); // Xóa các dấu (accents)
     }
 
     private List<String> toTypeCodeList(String typeCode) {
@@ -131,6 +138,7 @@ public class BuildingServiceImpl implements BuildingService {
 
         // Lưu building trước để có ID
         buildingEntity = buildingRepository.save(buildingEntity);
+        buildingDTO.setId(buildingEntity.getId());
 
         // Thêm RentArea nếu có
         if (StringUtils.checkString(buildingDTO.getRentArea())) {
@@ -161,7 +169,6 @@ public class BuildingServiceImpl implements BuildingService {
 
         return res;
     }
-
 
 
     @Override
