@@ -24,14 +24,34 @@ public class BuildingAPI {
         return res;
     }
 
+//    @PostMapping
+//    public ResponseEntity<BuildingDTO> addOrUpdateBuilding(@RequestBody BuildingDTO buildingDTO) {
+//        return ResponseEntity.ok(buildingService.addOrUpdateBuilding(buildingDTO));
+//    }
+
+    //POST (tạo mới) → Bắt buộc id phải null.
     @PostMapping
-    public ResponseEntity<BuildingDTO> addOrUpdateBuilding(@RequestBody BuildingDTO buildingDTO) {
-        return ResponseEntity.ok(buildingService.addOrUpdateBuilding(buildingDTO));
+    public ResponseEntity<?> createBuilding(@RequestBody BuildingDTO buildingDTO) {
+        // ✅ Khi tạo mới, không cần ID
+        buildingDTO.setId(null);
+
+        BuildingDTO savedBuilding = buildingService.addOrUpdateBuilding(buildingDTO);
+        return ResponseEntity.ok(savedBuilding);
+    }
+
+    //PUT (cập nhật) → Bắt buộc id phải có (@PathVariable Long id).
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateBuilding(@PathVariable Long id, @RequestBody BuildingDTO buildingDTO) {
+        // ✅ Khi cập nhật, ID phải tồn tại
+        buildingDTO.setId(id);
+
+        BuildingDTO updatedBuilding = buildingService.addOrUpdateBuilding(buildingDTO);
+        return ResponseEntity.ok(updatedBuilding);
     }
 
 
     @DeleteMapping("/{id}")
     public void deleteBuilding(@PathVariable Long id) {
-        buildingService.deleteBuildings(id);
+        buildingService.deleteBuilding(id);
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 public interface BuildingService {
     List<BuildingSearchResponse> searchBuildings(BuildingSearchRequest buildingSearchRequest);
 
-    public void deleteBuildings(Long id);
+    public void deleteBuilding(Long buildingId);
 
     public BuildingDTO addOrUpdateBuilding(BuildingDTO buildingDTO);
 

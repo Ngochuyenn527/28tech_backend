@@ -1,9 +1,93 @@
 CREATE DATABASE  IF NOT EXISTS `estateadvance`;
 USE `estateadvance`;
 
+DROP TABLE IF EXISTS `rentarea`;
+CREATE TABLE `rentarea` (
+                            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                            `value` int(11) DEFAULT NULL,
+                            `buildingid` bigint(20) DEFAULT NULL,
+                            `createddate` datetime DEFAULT NULL,
+                            `modifieddate` datetime DEFAULT NULL,
+                            `createdby` varchar(255) DEFAULT NULL,
+                            `modifiedby` varchar(255) DEFAULT NULL,
+                            PRIMARY KEY (`id`),
+                            KEY `rentarea_building` (`buildingid`),
+                            CONSTRAINT `rentarea_building` FOREIGN KEY (`buildingid`) REFERENCES `building` (`id`)
+);
+--
+-- Dumping data for table `rentarea`
+--
+
+LOCK TABLES `rentarea` WRITE;
+INSERT INTO `rentarea` VALUES (1,100,1,NULL,NULL,NULL,NULL),(2,200,1,NULL,NULL,NULL,NULL),(3,200,2,NULL,NULL,NULL,NULL),(4,300,2,NULL,NULL,NULL,NULL),(5,400,2,NULL,NULL,NULL,NULL),(6,300,3,NULL,NULL,NULL,NULL),(7,400,3,NULL,NULL,NULL,NULL),(8,500,3,NULL,NULL,NULL,NULL),(9,100,4,NULL,NULL,NULL,NULL),(10,400,4,NULL,NULL,NULL,NULL),(11,250,4,NULL,NULL,NULL,NULL),(24,700,6,NULL,NULL,NULL,NULL);
+UNLOCK TABLES;
+
+--
+-- Table structure for table `assignmentbuilding`
+--
+DROP TABLE IF EXISTS `assignmentbuilding`;
+
+CREATE TABLE `assignmentbuilding` (
+                                      `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                                      `staffid` bigint(20) NOT NULL,
+                                      `buildingid` bigint(20) NOT NULL,
+                                      `createddate` datetime DEFAULT NULL,
+                                      `modifieddate` datetime DEFAULT NULL,
+                                      `createdby` varchar(255) DEFAULT NULL,
+                                      `modifiedby` varchar(255) DEFAULT NULL,
+                                      PRIMARY KEY (`id`),
+                                      KEY `fk_user_building` (`staffid`),
+                                      KEY `fk_building_user` (`buildingid`),
+                                      CONSTRAINT `fk_building_user` FOREIGN KEY (`buildingid`) REFERENCES `building` (`id`),
+                                      CONSTRAINT `fk_user_building` FOREIGN KEY (`staffid`) REFERENCES `user` (`id`)
+);
+
+--
+-- Dumping data for table `assignmentbuilding`
+--
+
+LOCK TABLES `assignmentbuilding` WRITE;
+INSERT INTO `assignmentbuilding` VALUES (1,2,1,NULL,NULL,NULL,NULL),(2,2,3,NULL,NULL,NULL,NULL),(3,3,1,NULL,NULL,NULL,NULL),(4,3,4,NULL,NULL,NULL,NULL);
+UNLOCK TABLES;
+
+--
+-- Table structure for table `assignmentcustomer`
+--
+
+DROP TABLE IF EXISTS `assignmentcustomer`;
+CREATE TABLE `assignmentcustomer` (
+                                      `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                                      `staffid` bigint(20) NOT NULL,
+                                      `customerid` bigint(20) NOT NULL,
+                                      `createddate` datetime DEFAULT NULL,
+                                      `modifieddate` datetime DEFAULT NULL,
+                                      `createdby` varchar(255) DEFAULT NULL,
+                                      `modifiedby` varchar(255) DEFAULT NULL,
+                                      PRIMARY KEY (`id`),
+                                      KEY `fk_user_customer` (`staffid`),
+                                      KEY `fk_customer_user` (`customerid`),
+                                      CONSTRAINT `fk_customer_user` FOREIGN KEY (`customerid`) REFERENCES `customer` (`id`),
+                                      CONSTRAINT `fk_user_customer` FOREIGN KEY (`staffid`) REFERENCES `user` (`id`)
+) ;
+
+--
+-- Dumping data for table `assignmentcustomer`
+--
+
+LOCK TABLES `assignmentcustomer` WRITE;
+INSERT INTO assignmentcustomer(staffid,customerid)
+VALUES(2,1),(2,3),(3,1),(3,3);
+UNLOCK TABLES;
+
+--
+-- Table structure for table `building`
+--
+
+
+
 DROP TABLE IF EXISTS `building`;
 CREATE TABLE `building` (
-                            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                            `id` bigint(20) AUTO_INCREMENT,
                             `name` varchar(255) NOT NULL,
                             `street` varchar(255) DEFAULT NULL,
                             `ward` varchar(255) DEFAULT NULL,
@@ -46,11 +130,13 @@ CREATE TABLE `building` (
 
 LOCK TABLES `building` WRITE;
 INSERT INTO `building` VALUES
-                           (1,'Nam Giao Building Tower','59 phan xích long','Phường 2','QUAN_1',NULL,2,NULL,15,'15 triệu/m2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'TANG_TRET,NGUYEN_CAN',NULL,NULL,NULL,NULL,'Anh Nam-Chị Linh','0915354727'),
+
+                           (1,'Nam Giao Building Tower','59 phan xích long','Phường 2','QUAN_1','Xoắn ốc',2,'Tây Nam',15,'15 triệu/m2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'TANG_TRET,NGUYEN_CAN',NULL,NULL,NULL,NULL,'Anh Nam-Chị Linh','0915354727'),
                            (2,'ACM Tower','96 cao thắng','Phường 4','QUAN_2','Xoắn ốc',2, 'Tây Nam',18,'18 triệu/m2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'NGUYEN_CAN',NULL,NULL,NULL,NULL,'Chú Thuận','0173546263'),
-                           (3,'Alpha 2 Building Tower','153 nguyễn đình chiểu','Phường 6','QUAN_1',NULL,1,NULL,20,'20 triệu/m2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'NOI_THAT',NULL,NULL,NULL,NULL,'Cô Lý','0555532578'),
-                           (4,'IDD 1 Building','111 Lý Chính Thắng','Phường 7','QUAN_4',NULL,1,NULL,12,'12 triệu/m2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'TANG_TRET,NGUYEN_CAN,NOI_THAT',NULL,NULL,NULL,NULL,'Anh Long','017345253'),
+                           (3,'Alpha 2 Building Tower','153 nguyễn đình chiểu','Phường 6','QUAN_1','Xoắn ốc',1,'Tây Nam',20,'20 triệu/m2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'NOI_THAT',NULL,NULL,NULL,NULL,'Cô Lý','0555532578'),
+                           (4,'IDD 1 Building','111 Lý Chính Thắng','Phường 7','QUAN_4','Xoắn ốc',1,'Tây Nam',12,'12 triệu/m2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'TANG_TRET,NGUYEN_CAN,NOI_THAT',NULL,NULL,NULL,NULL,'Anh Long','017345253'),
                            (6,'test',NULL,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Anh Long','017345253');
+
 UNLOCK TABLES;
 
 --
@@ -89,27 +175,7 @@ UNLOCK TABLES;
 -- Table structure for table `rentarea`
 --
 
-DROP TABLE IF EXISTS `rentarea`;
-CREATE TABLE `rentarea` (
-                            `id` bigint(20) NOT NULL AUTO_INCREMENT,
-                            `value` int(11) DEFAULT NULL,
-                            `buildingid` bigint(20) DEFAULT NULL,
-                            `createddate` datetime DEFAULT NULL,
-                            `modifieddate` datetime DEFAULT NULL,
-                            `createdby` varchar(255) DEFAULT NULL,
-                            `modifiedby` varchar(255) DEFAULT NULL,
-                            PRIMARY KEY (`id`),
-                            KEY `rentarea_building` (`buildingid`),
-                            CONSTRAINT `rentarea_building` FOREIGN KEY (`buildingid`) REFERENCES `building` (`id`)
-);
 
---
--- Dumping data for table `rentarea`
---
-
-LOCK TABLES `rentarea` WRITE;
-INSERT INTO `rentarea` VALUES (1,100,1,NULL,NULL,NULL,NULL),(2,200,1,NULL,NULL,NULL,NULL),(3,200,2,NULL,NULL,NULL,NULL),(4,300,2,NULL,NULL,NULL,NULL),(5,400,2,NULL,NULL,NULL,NULL),(6,300,3,NULL,NULL,NULL,NULL),(7,400,3,NULL,NULL,NULL,NULL),(8,500,3,NULL,NULL,NULL,NULL),(9,100,4,NULL,NULL,NULL,NULL),(10,400,4,NULL,NULL,NULL,NULL),(11,250,4,NULL,NULL,NULL,NULL),(24,700,6,NULL,NULL,NULL,NULL);
-UNLOCK TABLES;
 
 --
 -- Table structure for table `role`
@@ -227,63 +293,3 @@ UNLOCK TABLES;
 -- Dumping routines for database 'estateadvance'
 --
 
---
--- Table structure for table `assignmentbuilding`
---
-DROP TABLE IF EXISTS `assignmentbuilding`;
-
-CREATE TABLE `assignmentbuilding` (
-                                      `id` bigint(20) NOT NULL AUTO_INCREMENT,
-                                      `staffid` bigint(20) NOT NULL,
-                                      `buildingid` bigint(20) NOT NULL,
-                                      `createddate` datetime DEFAULT NULL,
-                                      `modifieddate` datetime DEFAULT NULL,
-                                      `createdby` varchar(255) DEFAULT NULL,
-                                      `modifiedby` varchar(255) DEFAULT NULL,
-                                      PRIMARY KEY (`id`),
-                                      KEY `fk_user_building` (`staffid`),
-                                      KEY `fk_building_user` (`buildingid`),
-                                      CONSTRAINT `fk_building_user` FOREIGN KEY (`buildingid`) REFERENCES `building` (`id`),
-                                      CONSTRAINT `fk_user_building` FOREIGN KEY (`staffid`) REFERENCES `user` (`id`)
-);
-
---
--- Dumping data for table `assignmentbuilding`
---
-
-LOCK TABLES `assignmentbuilding` WRITE;
-INSERT INTO `assignmentbuilding` VALUES (1,2,1,NULL,NULL,NULL,NULL),(2,2,3,NULL,NULL,NULL,NULL),(3,3,1,NULL,NULL,NULL,NULL),(4,3,4,NULL,NULL,NULL,NULL);
-UNLOCK TABLES;
-
---
--- Table structure for table `assignmentcustomer`
---
-
-DROP TABLE IF EXISTS `assignmentcustomer`;
-CREATE TABLE `assignmentcustomer` (
-                                      `id` bigint(20) NOT NULL AUTO_INCREMENT,
-                                      `staffid` bigint(20) NOT NULL,
-                                      `customerid` bigint(20) NOT NULL,
-                                      `createddate` datetime DEFAULT NULL,
-                                      `modifieddate` datetime DEFAULT NULL,
-                                      `createdby` varchar(255) DEFAULT NULL,
-                                      `modifiedby` varchar(255) DEFAULT NULL,
-                                      PRIMARY KEY (`id`),
-                                      KEY `fk_user_customer` (`staffid`),
-                                      KEY `fk_customer_user` (`customerid`),
-                                      CONSTRAINT `fk_customer_user` FOREIGN KEY (`customerid`) REFERENCES `customer` (`id`),
-                                      CONSTRAINT `fk_user_customer` FOREIGN KEY (`staffid`) REFERENCES `user` (`id`)
-) ;
-
---
--- Dumping data for table `assignmentcustomer`
---
-
-LOCK TABLES `assignmentcustomer` WRITE;
-INSERT INTO assignmentcustomer(staffid,customerid)
-VALUES(2,1),(2,3),(3,1),(3,3);
-UNLOCK TABLES;
-
---
--- Table structure for table `building`
---

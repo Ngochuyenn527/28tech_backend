@@ -11,6 +11,10 @@ import com.javaweb.service.RentAreaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class RentAreaServiceImpl implements RentAreaService {
 
@@ -25,28 +29,58 @@ public class RentAreaServiceImpl implements RentAreaService {
 
     @Override
     public void addRentArea(BuildingDTO buildingDTO) {
-        // Tìm BuildingEntity dựa trên ID của DTO
-        BuildingEntity buildingEntity = buildingRepository.findById(buildingDTO.getId()).get();
+        if (buildingDTO.getId() == null) {
+            throw new IllegalArgumentException("Building ID cannot be null");
+        }
+
+        // Tìm BuildingEntity theo ID
+        BuildingEntity buildingEntity = buildingRepository.findById(buildingDTO.getId())
+                .orElseThrow(() -> new RuntimeException("Building not found with ID: " + buildingDTO.getId()));
 
         // Xóa tất cả diện tích thuê cũ của tòa nhà
         rentAreaRepository.deleteByBuilding(buildingEntity);
 
-        // Tách chuỗi diện tích thuê thành mảng
-        String[] rentAreas = buildingDTO.getRentArea().trim().split(",");
-
-        // Lặp qua từng diện tích và lưu vào DB
-        for (String val : rentAreas) {
-            RentAreaEntity rentAreaEntity = rentAreaConverter.toRentAreaEntity(buildingDTO, Long.valueOf(val));
-            rentAreaRepository.save(rentAreaEntity);
+        // Kiểm tra rentArea có hợp lệ không
+        if (buildingDTO.getRentArea() == null || buildingDTO.getRentArea().trim().isEmpty()) {
+            return; // Không có diện tích thuê mới, chỉ xóa diện tích cũ
         }
+
+        // Tách chuỗi diện tích thuê thành danh sách số nguyên (bỏ khoảng trắng, kiểm tra lỗi)
+        List<RentAreaEntity> rentAreas = Arrays.stream(buildingDTO.getRentArea().split(","))
+                .map(String::trim)
+                .filter(s -> {
+                    if (s.isEmpty()) return false;
+                    try {
+                        Long.parseLong(s);
+                        return true;
+                    } catch (NumberFormatException e) {
+                        System.err.println("⚠️ Warning: Skipping invalid rent area value: " + s);
+                        return false;
+                    }
+                })
+                .map(s -> rentAreaConverter.toRentAreaEntity(buildingDTO, Long.valueOf(s)))
+                .collect(Collectors.toList());
+
+        // Lưu toàn bộ danh sách diện tích thuê một lần để tối ưu hiệu suất
+        rentAreaRepository.saveAll(rentAreas);
     }
+
 
 
     @Override
     public void deleteByBuilding(Long id) {
-        BuildingEntity buildingEntity = buildingRepository.findById(id).get();
-        // Xóa tất cả diện tích thuê cũ của tòa nhà
+        BuildingEntity buildingEntity = buildingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Building not found with ID: " + id));
+
+        // Kiểm tra trước khi xóa
+        if (!rentAreaRepository.existsByBuilding(buildingEntity)) {
+            System.out.println("⚠️ Warning: No rent areas found for building ID: " + id);
+            return;
+        }
+
         rentAreaRepository.deleteByBuilding(buildingEntity);
     }
+
+
 
 }

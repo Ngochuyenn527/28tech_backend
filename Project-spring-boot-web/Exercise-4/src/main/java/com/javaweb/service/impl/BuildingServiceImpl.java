@@ -9,6 +9,7 @@ import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.repository.BuildingRepository;
+import com.javaweb.repository.RentAreaRepository;
 import com.javaweb.service.BuildingService;
 import com.javaweb.service.RentAreaService;
 import javassist.NotFoundException;
@@ -16,6 +17,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.javaweb.utils.*;
+
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,6 +34,9 @@ public class BuildingServiceImpl implements BuildingService {
     private BuildingRepository buildingRepository;
 
     @Autowired
+    private RentAreaRepository rentAreaRepository;
+
+    @Autowired
     private BuildingSearchResponseConverter buildingSearchResponseConverter;
 
     @Autowired
@@ -38,6 +44,7 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Autowired
     private RentAreaService rentAreaService;
+
     @Override
     public List<BuildingSearchResponse> searchBuildings(BuildingSearchRequest buildingSearchRequest) {
 
@@ -58,10 +65,12 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public void deleteBuildings(Long id) {
-        rentAreaService.deleteByBuilding(id);
-//        assignmentBuildingService.deleteByBuildingsIn(id);
-        buildingRepository.deleteById(id);
+    public void deleteBuilding(Long buildingId) {
+        BuildingEntity building = buildingRepository.findById(buildingId)
+                .orElseThrow(() -> new RuntimeException("Building not found"));
+
+        rentAreaRepository.deleteByBuilding(building); // Xóa RentAreaEntity trước
+        buildingRepository.delete(building); // Sau đó xóa BuildingEntity
     }
 
 
@@ -86,8 +95,8 @@ public class BuildingServiceImpl implements BuildingService {
         return true;
     }
 
-    public static String removeAccent(List<String> typeCodes){
-        String s = String.join(",",typeCodes);
+    public static String removeAccent(List<String> typeCodes) {
+        String s = String.join(",", typeCodes);
         return s;
     }
 
@@ -99,44 +108,60 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
 
-
+    @Transactional
     @Override
     public BuildingDTO addOrUpdateBuilding(BuildingDTO buildingDTO) {
-        Long buildingId = buildingDTO.getId();
-        BuildingEntity buildingEntity = modelMapper.map(buildingDTO, BuildingEntity.class);
+        BuildingEntity buildingEntity;
+
+        if (buildingDTO.getId() != null) {
+            buildingEntity = buildingRepository.findById(buildingDTO.getId())
+                    .orElseThrow(() -> new RuntimeException("Building not found!"));
+
+            // Xóa RentArea cũ trước khi thêm mới
+            rentAreaRepository.deleteByBuilding(buildingEntity);
+
+            // Map nhưng giữ lại ID cũ
+            modelMapper.map(buildingDTO, buildingEntity);
+        } else {
+            // Nếu thêm mới, tạo entity mới
+            buildingEntity = modelMapper.map(buildingDTO, BuildingEntity.class);
+        }
+
         buildingEntity.setTypeCode(removeAccent(buildingDTO.getTypeCode()));
 
-        buildingRepository.save(buildingEntity);
+        // Lưu building trước để có ID
+        buildingEntity = buildingRepository.save(buildingEntity);
 
+        // Thêm RentArea nếu có
         if (StringUtils.checkString(buildingDTO.getRentArea())) {
             rentAreaService.addRentArea(buildingDTO);
         }
 
-        return buildingDTO;
+        return modelMapper.map(buildingEntity, BuildingDTO.class);
     }
+
 
     @Override
     public BuildingDTO findById(Long id) {
-        // Tìm thực thể trong database theo ID
-        BuildingEntity buildingEntity = buildingRepository.findById(id).get();
+        if (id == null) {
+            return null; // Nếu ID null thì không tìm
+        }
 
-        // Chuyển đổi từ BuildingEntity sang BuildingDTO
+        BuildingEntity buildingEntity = buildingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Building not found"));
+
         BuildingDTO res = modelMapper.map(buildingEntity, BuildingDTO.class);
 
-        // Lấy danh sách diện tích thuê
-        List<RentAreaEntity> rentAreaEntities = buildingEntity.getRentAreaEntities();
-
-        // Chuyển danh sách diện tích thuê thành chuỗi, ngăn cách bởi dấu ","
-        String rentArea = rentAreaEntities.stream()
+        // Chuyển rentArea từ List<RentAreaEntity> thành chuỗi "100,200,300"
+        String rentArea = buildingEntity.getRentAreaEntities().stream()
                 .map(it -> it.getValue().toString())
                 .collect(Collectors.joining(","));
-
-        // Gán lại các giá trị vào DTO
         res.setRentArea(rentArea);
         res.setTypeCode(toTypeCodeList(buildingEntity.getTypeCode()));
 
         return res;
     }
+
 
 
     @Override

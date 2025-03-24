@@ -7,4 +7,6 @@ public interface RentAreaService {
     public void addRentArea(BuildingDTO  buildingDTO);
 
     public void deleteByBuilding(Long id);
+
+
 }

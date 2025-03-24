@@ -15,6 +15,8 @@ public class BuildingSearchResponseConverter {
     @Autowired
     private ModelMapper modelMapper;
 
+    // chuyển đổi dữ liệu từ BuildingEntity (đối tượng trong database) sang BuildingSearchResponse (đối tượng phản hồi cho client).
+    // Nó sử dụng ModelMapper để ánh xạ thuộc tính tự động và tùy chỉnh một số trường.
     public BuildingSearchResponse convertToBuildingSearchResponse(BuildingEntity buildingEntity) {
         BuildingSearchResponse res = modelMapper.map(buildingEntity, BuildingSearchResponse.class);
 
