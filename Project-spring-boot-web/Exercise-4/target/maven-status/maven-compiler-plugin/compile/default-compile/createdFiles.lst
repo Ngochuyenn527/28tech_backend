@@ -3,13 +3,16 @@ com\javaweb\repository\BuildingRepository.class
 com\javaweb\utils\EncodingFilter.class
 com\javaweb\entity\BuildingEntity.class
 com\javaweb\config\JpaAuditingConfig$AuditorAwareImpl.class
+com\javaweb\service\impl\RentAreaServiceImpl.class
 com\javaweb\entity\BaseEntity.class
 com\javaweb\model\request\BuildingSearchRequest.class
 com\javaweb\entity\RoleEntity.class
+com\javaweb\service\RentAreaService.class
 com\javaweb\SpringBootWebApplication.class
 com\javaweb\entity\RentAreaEntity.class
 com\javaweb\model\dto\UserDTO.class
 com\javaweb\exception\MyException.class
+com\javaweb\repository\RentAreaRepository.class
 com\javaweb\converter\RoleConverter.class
 com\javaweb\service\impl\RoleService.class
 com\javaweb\entity\UserEntity.class
@@ -42,6 +45,7 @@ com\javaweb\security\CustomSuccessHandler.class
 com\javaweb\model\dto\RoleDTO.class
 com\javaweb\utils\MessageUtils.class
 com\javaweb\utils\MapUtils.class
+com\javaweb\converter\RentAreaConverter.class
 com\javaweb\enums\District.class
 com\javaweb\service\impl\UserService.class
 com\javaweb\model\dto\MyUserDetail.class

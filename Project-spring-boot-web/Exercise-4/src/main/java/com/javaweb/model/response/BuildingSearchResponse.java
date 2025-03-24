@@ -19,7 +19,7 @@ public class BuildingSearchResponse extends AbstractDTO {
     //    private String emptyArea;
     private Long rentPrice;
     private String serviceFee;
-    private Double brokerageFee;
+    private String brokerageFee;
 
     @Override
     public Long getId() {
@@ -95,11 +95,11 @@ public class BuildingSearchResponse extends AbstractDTO {
         this.serviceFee = serviceFee;
     }
 
-    public Double getBrokerageFee() {
+    public String getBrokerageFee() {
         return brokerageFee;
     }
 
-    public void setBrokerageFee(Double brokerageFee) {
+    public void setBrokerageFee(String brokerageFee) {
         this.brokerageFee = brokerageFee;
     }
 }

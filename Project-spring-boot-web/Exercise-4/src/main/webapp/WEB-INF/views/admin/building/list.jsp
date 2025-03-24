@@ -241,20 +241,20 @@
                                                 title="Phí môi giới"/>
 
                                 <display:column headerClass="col-actions" title="Thao tác">
-                                    <a class="btn btn-xs btn-success" title="Giao tòa nhà"
-                                       onclick="assignmentBuilding(${tableList.id})">
-                                        <i class="ace-icon glyphicon glyphicon-list"></i>
-                                    </a>
+<%--                                    <a class="btn btn-xs btn-success" title="Giao tòa nhà"--%>
+<%--                                       onclick="assignmentBuilding(${tableList.id})">--%>
+<%--                                        <i class="ace-icon glyphicon glyphicon-list"></i>--%>
+<%--                                    </a>--%>
 
-                                    <a class="btn btn-xs btn-info" title="Sửa tòa nhà"
-                                       href="/admin/building-edit-${tableList.id}">
-                                        <i class="ace-icon fa fa-pencil bigger-120"></i>
-                                    </a>
+<%--                                    <a class="btn btn-xs btn-info" title="Sửa tòa nhà"--%>
+<%--                                       href="/admin/building-edit-${tableList.id}">--%>
+<%--                                        <i class="ace-icon fa fa-pencil bigger-120"></i>--%>
+<%--                                    </a>--%>
 
-                                    <button class="btn btn-xs btn-danger" title="Xóa tòa nhà"
-                                            onclick="deleteBuilding(${tableList.id})" id="btnDeleteBuilding">
-                                        <i class="ace-icon fa fa-trash-o bigger-120"></i>
-                                    </button>
+<%--                                    <button class="btn btn-xs btn-danger" title="Xóa tòa nhà"--%>
+<%--                                            onclick="deleteBuilding(${tableList.id})" id="btnDeleteBuilding">--%>
+<%--                                        <i class="ace-icon fa fa-trash-o bigger-120"></i>--%>
+<%--                                    </button>--%>
                                 </display:column>
                             </display:table>
                         </form:form>

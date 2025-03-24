@@ -24,11 +24,6 @@ public class BuildingAPI {
         return res;
     }
 
-    //    @PostMapping
-//    public BuildingDTO addOrUpdateBuilding(@RequestBody BuildingDTO buildingDTO) {
-//        //xuong db de update hoac them moi
-//        return buildingDTO;
-//    }
     @PostMapping
     public ResponseEntity<BuildingDTO> addOrUpdateBuilding(@RequestBody BuildingDTO buildingDTO) {
         return ResponseEntity.ok(buildingService.addOrUpdateBuilding(buildingDTO));
@@ -37,7 +32,6 @@ public class BuildingAPI {
 
     @DeleteMapping("/{id}")
     public void deleteBuilding(@PathVariable Long id) {
-        //xuogn db de xoa theo id
-        System.out.println("ok");
+        buildingService.deleteBuildings(id);
     }
 }

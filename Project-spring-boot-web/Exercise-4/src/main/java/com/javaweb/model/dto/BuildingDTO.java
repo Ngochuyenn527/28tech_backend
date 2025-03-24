@@ -6,13 +6,13 @@ import java.util.List;
 public class BuildingDTO extends AbstractDTO {
 
     private String name;
-    private Long structure;
+    private String structure;
     private String district;
     private String ward;
     private String street;
     private Long numberOfBasement;
     private String direction;
-    private Long rentArea;
+    private String rentArea;
     private Long rentPrice;
     private String serviceFee;
     private String electricityFee;
@@ -29,11 +29,11 @@ public class BuildingDTO extends AbstractDTO {
         this.name = name;
     }
 
-    public Long getStructure() {
+    public String getStructure() {
         return structure;
     }
 
-    public void setStructure(Long structure) {
+    public void setStructure(String structure) {
         this.structure = structure;
     }
 
@@ -77,11 +77,11 @@ public class BuildingDTO extends AbstractDTO {
         this.direction = direction;
     }
 
-    public Long getRentArea() {
+    public String getRentArea() {
         return rentArea;
     }
 
-    public void setRentArea(Long rentArea) {
+    public void setRentArea(String rentArea) {
         this.rentArea = rentArea;
     }
 

@@ -238,11 +238,11 @@
             data: JSON.stringify(data), //chuyen data => dang json
             dataType: "json",
             contentType: "application/json",
-            success: function (respond) {
-                console.log("Success")
+            success: function (response) {
+                window.location.href = "<c:url value = '/admin/building-list?message=success' />";
             },
-            error: function (respond) {
-                console.log(respond)
+            error: function (response) {
+                window.location.href = "<c:url value = '/admin/building-edit?message=error' />";
             }
         });
     }
