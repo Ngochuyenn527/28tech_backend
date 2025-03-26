@@ -89,16 +89,6 @@ public class BuildingDTO extends AbstractDTO {
         this.rentArea = rentArea;
     }
 
-    //giúp chuyển danh sách đối tượng thành chuỗi số, ngăn lỗi [com.javaweb.entity.RentAreaEntity@...] xuất hiện.
-    public void setRentAreas(List<RentAreaEntity> rentAreas) {
-        if (rentAreas != null && !rentAreas.isEmpty()) {
-            this.rentArea = rentAreas.stream()
-                    .map(area -> String.valueOf(area.getValue()))
-                    .collect(Collectors.joining(","));
-        } else {
-            this.rentArea = "";
-        }
-    }
     public Long getRentPrice() {
         return rentPrice;
     }

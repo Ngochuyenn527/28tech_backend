@@ -25,12 +25,6 @@ public class BuildingAPI {
         return res;
     }
 
-//    @PostMapping("/buildings")
-//    //    public ResponseEntity<BuildingDTO> createBuilding(@RequestBody BuildingDTO buildingDTO) {
-//    //        BuildingDTO newBuilding = buildingService.addBuilding(buildingDTO);
-//    //        return ResponseEntity.status(HttpStatus.CREATED).body(newBuilding);
-//    //    }
-
     @PostMapping
     public ResponseEntity<BuildingDTO> addBuilding(@RequestBody BuildingDTO buildingDTO) {
         BuildingDTO savedBuilding = buildingService.addBuilding(buildingDTO);
@@ -43,18 +37,14 @@ public class BuildingAPI {
         return ResponseEntity.ok(updatedBuilding);
     }
 
-
-
-
-//    @PostMapping
-//    public ResponseEntity<BuildingDTO> addOrUpdateBuilding(@RequestBody BuildingDTO buildingDTO) {
-//        return ResponseEntity.ok(buildingService.addOrUpdateBuilding(buildingDTO));
-//    }
-
-
     @DeleteMapping("/{id}")
-    public void deleteBuilding(@PathVariable Long id) {
-        //xuogn db de xoa theo id
-        System.out.println("ok");
+    public ResponseEntity<String> deleteBuilding(@PathVariable Long id) {
+        try {
+            buildingService.deleteBuilding(id);
+            return ResponseEntity.ok("Deleted building successfully with id: " + id);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
+
 }

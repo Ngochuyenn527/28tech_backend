@@ -11,19 +11,6 @@ import java.util.List;
 
 @Component
 public class RentAreaConverter {
-//    public RentAreaEntity toRentAreaEntity(BuildingDTO buildingDTO, Long val) {
-//        BuildingEntity buildingEntity = new BuildingEntity();
-//        buildingEntity.setId(buildingDTO.getId());
-//
-//        RentAreaEntity res = new RentAreaEntity();
-//        res.setValue(val);
-//        res.setBuilding(buildingEntity);
-//
-//        return res;
-//    }
-//
-//}
-
     public List<RentAreaEntity> convertRentAreaStringToEntities(String rentAreaStr, BuildingEntity building) {
         List<RentAreaEntity> rentAreas = new ArrayList<>();
         String[] rentAreaValues = rentAreaStr.split(",");
