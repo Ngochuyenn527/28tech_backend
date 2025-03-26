@@ -13,8 +13,12 @@ public interface BuildingService {
 
     public BuildingDTO addOrUpdateBuilding(BuildingDTO buildingDTO);
 
-    public BuildingDTO findById(Long id);
+//    public BuildingDTO findById(Long id);
 
     public int countTotalItems(List<BuildingSearchResponse> list);
+
+    public BuildingDTO addBuilding(BuildingDTO buildingDTO);
+
+    public BuildingDTO updateBuilding(Long id, BuildingDTO buildingDTO);
 
 }

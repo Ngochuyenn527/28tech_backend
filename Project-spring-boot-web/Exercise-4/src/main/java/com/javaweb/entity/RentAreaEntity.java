@@ -7,25 +7,34 @@ import javax.persistence.*;
 public class RentAreaEntity extends BaseEntity {
 
     @Column(name = "value")
-    private String value;
+    private Long value;
 
     @ManyToOne
     @JoinColumn(name = "buildingid")
-    private BuildingEntity buildingEntity;
+    private BuildingEntity building;
 
-    public BuildingEntity getBuildingEntity() {
-        return buildingEntity;
+//    public BuildingEntity getBuildingEntity() {
+//        return building;
+//    }
+//
+//    public void setBuildingEntity(BuildingEntity buildingEntity) {
+//        this.building = buildingEntity;
+//    }
+
+
+    public BuildingEntity getBuilding() {
+        return building;
     }
 
-    public void setBuildingEntity(BuildingEntity buildingEntity) {
-        this.buildingEntity = buildingEntity;
+    public void setBuilding(BuildingEntity building) {
+        this.building = building;
     }
 
-    public String getValue() {
+    public Long getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Long value) {
         this.value = value;
     }
 

@@ -27,24 +27,6 @@ public class BuildingController {
     @Autowired
     private IUserService userService;
 
-    //    ModelAndView sử dụng để Chuyển dữ liệu (Model) từ Controller sang View => Xác định View nào sẽ hiển thị dữ liệu
-//    @GetMapping(value = "/admin/building-list")
-//    public ModelAndView buildingList(@ModelAttribute BuildingSearchRequest buildingSearchRequest, HttpServletRequest request) {
-//        ModelAndView mav = new ModelAndView("admin/building/list"); // Truyền tên View muốn hiển thị khi khởi tạo ModelAndView
-//        mav.addObject("modelSearch", buildingSearchRequest); // => Được sd trong bảng tìm kiếm của building/list
-//        //xuong db laays du lieu
-//
-//        List<BuildingSearchResponse> res = buildingService.searchBuildings(buildingSearchRequest);
-//        BuildingSearchResponse buildingSearchResponseList = new BuildingSearchResponse();
-//        buildingSearchResponseList.setListResult(res);
-//
-//        mav.addObject("districts", District.districtMap()); //Truyền danh sách quận đến View để hiển thị.
-//        mav.addObject("typeCodes", TypeCode.typeCodeMap()); //Truyền danh sách loại hình tòa nhà (typeCodes).
-//        mav.addObject("buildingListResponse", buildingSearchResponseList); //Truyền thông tin buildingDTO sang View để hiển thị dữ liệu tòa nhà cần chỉnh sửa.
-//
-//        return mav;
-//    }
-
     @GetMapping(value = "/admin/building-list")
     public ModelAndView buildingList(@ModelAttribute BuildingSearchRequest buildingSearchRequest, HttpServletRequest request) {
 

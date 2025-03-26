@@ -7,6 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "building")
+// Lưu trữ dữ liệu của tòa nhà, ánh xạ trực tiếp với bảng building trong database.
 public class BuildingEntity extends BaseEntity {
 
     @Column(name = "name")
@@ -25,12 +26,12 @@ public class BuildingEntity extends BaseEntity {
     private String ward;
 
     @Column(name = "numberofbasement")
-    private Integer numberofbasement;
+    private Long numberofbasement;
 
     @Column(name = "direction")
     private String direction;
 
-    @OneToMany(mappedBy = "buildingEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "building", fetch = FetchType.EAGER)
     private List<RentAreaEntity> rentAreaEntities = new ArrayList<RentAreaEntity>();
 
     public List<RentAreaEntity> getRentAreaEntities() {
@@ -45,19 +46,19 @@ public class BuildingEntity extends BaseEntity {
     private Long rentprice;
 
     @Column(name = "servicefee")
-    private Long servicefee;
+    private String servicefee;
 
     @Column(name = "electricityfee")
-    private Long electricityfee;
+    private String electricityfee;
 
     @Column(name = "waterfee")
-    private Long waterfee;
+    private String waterfee;
 
     @Column(name = "deposit")
-    private Long deposit;
+    private String deposit;
 
     @Column(name = "brokeragefee")
-    private Long brokeragefee;
+    private String brokeragefee;
 
     @Column(name = "type")
     private String typeCode;
@@ -111,11 +112,12 @@ public class BuildingEntity extends BaseEntity {
         this.ward = ward;
     }
 
-    public Integer getNumberofbasement() {
+
+    public Long getNumberofbasement() {
         return numberofbasement;
     }
 
-    public void setNumberofbasement(Integer numberofbasement) {
+    public void setNumberofbasement(Long numberofbasement) {
         this.numberofbasement = numberofbasement;
     }
 
@@ -135,43 +137,43 @@ public class BuildingEntity extends BaseEntity {
         this.rentprice = rentprice;
     }
 
-    public Long getServicefee() {
+    public String getServicefee() {
         return servicefee;
     }
 
-    public void setServicefee(Long servicefee) {
+    public void setServicefee(String servicefee) {
         this.servicefee = servicefee;
     }
 
-    public Long getElectricityfee() {
+    public String getElectricityfee() {
         return electricityfee;
     }
 
-    public void setElectricityfee(Long electricityfee) {
+    public void setElectricityfee(String electricityfee) {
         this.electricityfee = electricityfee;
     }
 
-    public Long getWaterfee() {
+    public String getWaterfee() {
         return waterfee;
     }
 
-    public void setWaterfee(Long waterfee) {
+    public void setWaterfee(String waterfee) {
         this.waterfee = waterfee;
     }
 
-    public Long getDeposit() {
+    public String getDeposit() {
         return deposit;
     }
 
-    public void setDeposit(Long deposit) {
+    public void setDeposit(String deposit) {
         this.deposit = deposit;
     }
 
-    public Long getBrokeragefee() {
+    public String getBrokeragefee() {
         return brokeragefee;
     }
 
-    public void setBrokeragefee(Long brokeragefee) {
+    public void setBrokeragefee(String brokeragefee) {
         this.brokeragefee = brokeragefee;
     }
 
@@ -183,4 +185,3 @@ public class BuildingEntity extends BaseEntity {
         this.typeCode = typeCode;
     }
 }
-

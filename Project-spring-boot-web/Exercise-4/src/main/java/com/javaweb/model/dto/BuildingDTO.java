@@ -1,18 +1,22 @@
 package com.javaweb.model.dto;
 
+import com.javaweb.entity.RentAreaEntity;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 //hứng data được điền trong các field của chức năng thêm, sửa tòa nhà
+//dùng để giao tiếp với API
 public class BuildingDTO extends AbstractDTO {
 
     private String name;
-    private Long structure;
+    private String structure;
     private String district;
     private String ward;
     private String street;
     private Long numberOfBasement;
     private String direction;
-    private Long rentArea;
+    private String rentArea;
     private Long rentPrice;
     private String serviceFee;
     private String electricityFee;
@@ -29,11 +33,11 @@ public class BuildingDTO extends AbstractDTO {
         this.name = name;
     }
 
-    public Long getStructure() {
+    public String getStructure() {
         return structure;
     }
 
-    public void setStructure(Long structure) {
+    public void setStructure(String structure) {
         this.structure = structure;
     }
 
@@ -77,14 +81,24 @@ public class BuildingDTO extends AbstractDTO {
         this.direction = direction;
     }
 
-    public Long getRentArea() {
+    public String getRentArea() {
         return rentArea;
     }
 
-    public void setRentArea(Long rentArea) {
+    public void setRentArea(String rentArea) {
         this.rentArea = rentArea;
     }
 
+    //giúp chuyển danh sách đối tượng thành chuỗi số, ngăn lỗi [com.javaweb.entity.RentAreaEntity@...] xuất hiện.
+    public void setRentAreas(List<RentAreaEntity> rentAreas) {
+        if (rentAreas != null && !rentAreas.isEmpty()) {
+            this.rentArea = rentAreas.stream()
+                    .map(area -> String.valueOf(area.getValue()))
+                    .collect(Collectors.joining(","));
+        } else {
+            this.rentArea = "";
+        }
+    }
     public Long getRentPrice() {
         return rentPrice;
     }
