@@ -4,6 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="display" uri="http://displaytag.sf.net" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
 <c:url var="buildingListURL" value="/admin/building-list"/>
 <c:url var="buildingAPI" value="/api/building"/>
@@ -90,8 +91,10 @@
                                                     <form:select class="form-control" path="district">
                                                         <form:option value="">---Chọn Quận---</form:option>
                                                         <form:options items="${districts}"></form:options>
-
                                                     </form:select>
+
+                                                    <!-- ✅ Hiển thị lỗi khi không chọn quận -->
+                                                    <form:errors path="district" cssClass="error"/>
                                                 </div>
                                                 <div class="col-xs-5">
                                                     <label class="name">Phường</label>
@@ -139,27 +142,6 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <!-- <div class="col-xs-12">
-                                                                                        <div class="col-xs-5">
-                                                                                            <label class="name">Tên quản lý</label>
-                                                                                            <input type="text" class="form-control">
-                                                                                        </div>
-                                                                                        <div class="col-xs-5">
-                                                                                            <label class="name">Điện thoại quản lý</label>
-                                                                                            <input type="text" class="form-control">
-                                                                                        </div>
-                                                                                        <div class="col-xs-2">
-                                                                                            <label class="name">Nhân viên</label>
-                                                                                            <select class="form-control">
-                                                                                                <option value="">---Chọn Nhân Viên---</option>
-                                                                                                <option value="">Nguyễn Văn A</option>
-                                                                                                <option value="">Nguyễn Văn B</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div> -->
-                                        </div>
-
-                                        <div class="form-group">
                                             <div class="col-xs-12">
 
                                                 <div class="col-xs-6">
@@ -175,7 +157,7 @@
                                             <div class="col-xs-12">
                                                 <div class="col-xs-6">
                                                     <button type="submit" class="btn btn-info"
-                                                            id="btnSearchBuilding">
+                                                            id="btnSearchBuilding" >
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16"
                                                              height="16" fill="currentColor" class="bi bi-search"
                                                              viewBox="0 0 16 16">
@@ -241,20 +223,20 @@
                                                 title="Phí môi giới"/>
 
                                 <display:column headerClass="col-actions" title="Thao tác">
-                                    <a class="btn btn-xs btn-success" title="Giao tòa nhà"
-                                       onclick="assignmentBuilding(${tableList.id})">
-                                        <i class="ace-icon glyphicon glyphicon-list"></i>
-                                    </a>
+<%--                                                                        <a class="btn btn-xs btn-success" title="Giao tòa nhà"--%>
+<%--                                                                           onclick="assignmentBuilding(${tableList.id})">--%>
+<%--                                                                            <i class="ace-icon glyphicon glyphicon-list"></i>--%>
+<%--                                                                        </a>--%>
 
-                                    <a class="btn btn-xs btn-info" title="Sửa tòa nhà"
-                                       href="/admin/building-edit-${tableList.id}">
-                                        <i class="ace-icon fa fa-pencil bigger-120"></i>
-                                    </a>
+<%--                                                                        <a class="btn btn-xs btn-info" title="Sửa tòa nhà"--%>
+<%--                                                                           href="/admin/building-edit-${tableList.id}">--%>
+<%--                                                                            <i class="ace-icon fa fa-pencil bigger-120"></i>--%>
+<%--                                                                        </a>--%>
 
-                                    <button class="btn btn-xs btn-danger" title="Xóa tòa nhà"
-                                            onclick="deleteBuilding(${tableList.id})" id="btnDeleteBuilding">
-                                        <i class="ace-icon fa fa-trash-o bigger-120"></i>
-                                    </button>
+<%--                                                                        <button class="btn btn-xs btn-danger" title="Xóa tòa nhà"--%>
+<%--                                                                                onclick="deleteBuilding(${tableList.id})" id="btnDeleteBuilding">--%>
+<%--                                                                            <i class="ace-icon fa fa-trash-o bigger-120"></i>--%>
+<%--                                                                        </button>--%>
                                 </display:column>
                             </display:table>
                         </form:form>
@@ -344,7 +326,7 @@
 
         $.ajax({
             type: "GET",
-            url: "http://localhost:8081/api/building/",
+            url: "http://localhost:8081/api/building",
             data: formData, // Truyền trực tiếp dữ liệu form
             success: function (response) {
                 console.log("Danh sách tòa nhà:", response);
@@ -358,6 +340,7 @@
 
 
     function loadResponseSearchDataFromTable(data) {
+
         let tableBody = $("#tableList tbody");
         tableBody.empty(); // Xóa dữ liệu cũ
 
@@ -368,8 +351,13 @@
 
         for (let i = 0; i < data.length; i++) {
             let building = data[i]; // Lấy từng phần tử trong mảng
+            if (!building.id) {
+                console.error("Lỗi: ID tòa nhà không tồn tại!", building);
+                continue; // Bỏ qua nếu ID không hợp lệ
+            }
+
             let row = `
-            <tr>
+            <tr id="row-${building.id}">
                 <td>` + building.name + `  </td>
                 <td>` + building.structure + `  </td>
                 <td>` + building.address + `  </td>
@@ -397,23 +385,79 @@
         }
     }
 
-    function deleteBuilding(id) {
-        var buildingId = [id];
-        $.ajax({
-            type: "DELETE", //http method
-            url: "${buildingAPI}/" + id,  //url call api
-            data: JSON.stringify(buildingId), //chuyen data => dang json
-            dataType: "json",
-            contentType: "application/json",
-            success: function (respond) {
-                console.log("Success")
-            },
-            error: function (respond) {
-                console.log(respond)
-            }
 
-        });
-    }
+    <%--function deleteBuilding(id) {--%>
+
+    <%--console.log("🔹 ID nhận được khi bấm xóa:", id, typeof id); // Kiểm tra giá trị và kiểu dữ liệu của id--%>
+    <%--    if (!id || isNaN(id)) {--%>
+    <%--        alert("Lỗi: ID tòa nhà không hợp lệ!");--%>
+    <%--        return;--%>
+    <%--    }--%>
+
+
+    <%--    if (!confirm("Bạn có chắc chắn muốn xóa tòa nhà này?")) {--%>
+    <%--        return;--%>
+    <%--    }--%>
+
+    <%--    $.ajax({--%>
+    <%--        type: "DELETE",--%>
+    <%--        url: `http://localhost:8081/api/building/${id}`, // API Backend--%>
+    <%--        contentType: "application/json",--%>
+    <%--        success: function (response) {--%>
+    <%--            alert("Xóa thành công!");--%>
+    <%--            $("#row-" + id).remove(); // Xóa dòng khỏi bảng nếu thành công--%>
+    <%--        },--%>
+    <%--        error: function (error) {--%>
+    <%--            console.error("Lỗi khi xóa tòa nhà:", error);--%>
+    <%--            alert("Không thể xóa tòa nhà. Vui lòng thử lại!");--%>
+    <%--        }--%>
+    <%--    });--%>
+    <%--}--%>
+
+//     function deleteBuilding(id) {
+//     if (!confirm("Bạn có chắc muốn xóa không?")) return;
+//
+//     console.log("ID cần xóa:", id); // Kiểm tra ID có giá trị không
+//
+//     $.ajax({
+//         url: "/api/building/delete/" + id,
+//         type: "DELETE",
+//         success: function (response) {
+//             alert("Xóa thành công!");
+//             location.reload();
+//         },
+//         error: function (xhr, status, error) {
+//             console.log("Lỗi AJAX:", status, error);
+//             console.log("Chi tiết lỗi:", xhr.responseText);
+//             alert("Có lỗi xảy ra, không thể xóa!");
+//         }
+//     });
+// }
+
+
+
+
+    // Xóa tòa nhà
+    // $(".btnDeleteBuilding").click(function () {
+    //     let buildingId = $(this).data("id");
+    //     if (confirm("Bạn có chắc chắn muốn xóa?")) {
+    //         $.ajax({
+    //             url: buildingAPI + "/" + buildingId,
+    //             type: "DELETE",
+    //             success: function () {
+    //                 alert("Xóa thành công!");
+    //                 location.reload();
+    //             },
+    //             error: function (error) {
+    //                 alert("Lỗi khi xóa: " + error.responseText);
+    //             }
+    //         });
+    //     }
+    // });
+
+
+
+
 
 </script>
 

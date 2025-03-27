@@ -1,6 +1,8 @@
 package com.javaweb.model.dto;
 
 import com.javaweb.entity.RentAreaEntity;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,21 +11,69 @@ import java.util.stream.Collectors;
 //dùng để giao tiếp với API
 public class BuildingDTO extends AbstractDTO {
 
-    private String name;
-    private String structure;
-    private String district;
-    private String ward;
-    private String street;
-    private Long numberOfBasement;
-    private String direction;
-    private String rentArea;
-    private Long rentPrice;
-    private String serviceFee;
-    private String electricityFee;
-    private String waterFee;
-    private String deposit;
-    private String brokerageFee;
-    private List<String> typeCode;
+        @NotBlank(message = "Tên tòa nhà không được để trống")
+        @Pattern(regexp = "^(?!\\d+$)[A-Za-zÀ-ỹ0-9 ]+$", message = "Tên tòa nhà phải chứa ít nhất một chữ cái")
+        private String name;
+
+        @NotBlank(message = "Cấu trúc tòa nhà không được để trống")
+        @Pattern(regexp = "^(?!\\d+$)[A-Za-zÀ-ỹ0-9 ]+$", message = "Cấu trúc tòa nhà phải chứa ít nhất một chữ cái")
+        private String structure;
+
+        @NotBlank(message = "Quận không được để trống")
+        private String district;
+
+        @NotBlank(message = "Phường không được để trống")
+        @Pattern(regexp = "^(?!\\d+$)[A-Za-zÀ-ỹ0-9 ]+$", message = "Phường phải chứa ít nhất một chữ cái")
+        private String ward;
+
+        @NotBlank(message = "Đường không được để trống")
+        @Pattern(regexp = "^(?!\\d+$)[A-Za-zÀ-ỹ0-9 ]+$", message = "Đường phải chứa ít nhất một chữ cái")
+        private String street;
+
+        @NotNull(message = "Số tầng hầm không được để trống")
+        @PositiveOrZero(message = "Số tầng hầm không được là số âm")
+        @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
+        private Long numberOfBasement;
+
+        @NotBlank(message = "Hướng không được để trống")
+        @Pattern(regexp = "^(?!\\d+$)[A-Za-zÀ-ỹ0-9 ]+$", message = "Hướng phải chứa ít nhất một chữ cái")
+        private String direction;
+
+        @NotBlank(message = "Diện tích thuê không được để trống")
+        @Pattern(regexp = "^[0-9,]+$", message = "Diện tích thuê chỉ được chứa số và dấu phẩy")
+        private String rentArea;
+
+        @NotNull(message = "Giá thuê không được để trống")
+        @Positive(message = "Giá thuê phải là số dương")
+        @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
+        private Long rentPrice;
+
+        @NotBlank(message = "Phí dịch vụ không được để trống")
+        @Positive(message = "Phí dịch vụ phải là số dương")
+        @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
+        private String serviceFee;
+
+        @NotBlank(message = "Phí điện không được để trống")
+        @Positive(message = "Phí điện phải là số dương")
+        @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
+        private String electricityFee;
+
+        @NotBlank(message = "Phí nước không được để trống")
+        @Positive(message = "Phí nước phải là số dương")
+        @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
+        private String waterFee;
+
+        @NotBlank(message = "Tiền đặt cọc không được để trống")
+        @Positive(message = "Tiền đặt cọc phải là số dương")
+        @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
+        private String deposit;
+
+        @NotBlank(message = "Phí môi giới không được để trống")
+        @Positive(message = "Phí môi giới phải là số dương")
+        @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
+        private String brokerageFee;
+
+        private List<String> typeCode; // Danh sách loại tòa nhà có thể để trống
 
     public String getName() {
         return name;

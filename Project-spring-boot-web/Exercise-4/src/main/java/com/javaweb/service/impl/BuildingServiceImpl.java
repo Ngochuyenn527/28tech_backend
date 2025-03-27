@@ -15,6 +15,7 @@ import com.javaweb.service.BuildingService;
 import com.javaweb.service.RentAreaService;
 import com.javaweb.utils.NumberUtils;
 import com.javaweb.utils.StringUtils;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class BuildingServiceImpl implements BuildingService {
 
     @Autowired
@@ -76,26 +78,27 @@ public class BuildingServiceImpl implements BuildingService {
         return (list != null) ? list.size() : 0;
     }
 
-    public static boolean checkAddBuilding(BuildingDTO buildingDTO) {
-        if (!StringUtils.checkString(buildingDTO.getName()) ||
-                !StringUtils.checkString(buildingDTO.getStructure()) ||
-                !StringUtils.checkString(buildingDTO.getDistrict()) ||
-                !StringUtils.checkString(buildingDTO.getWard()) ||
-                !StringUtils.checkString(buildingDTO.getStreet()) ||
-                !StringUtils.checkString(buildingDTO.getDirection()) ||
-                !StringUtils.checkString(buildingDTO.getRentArea()) ||
-                !StringUtils.checkString(buildingDTO.getServiceFee()) ||
-                !StringUtils.checkString(buildingDTO.getElectricityFee()) ||
-                !StringUtils.checkString(buildingDTO.getWaterFee()) ||
-                !StringUtils.checkString(buildingDTO.getDeposit()) ||
-                !StringUtils.checkString(buildingDTO.getBrokerageFee()) ||
 
-                !NumberUtils.checkNumber(buildingDTO.getNumberOfBasement()) ||
-                !NumberUtils.checkNumber(buildingDTO.getRentPrice())) {
-            return false;
-        }
-        return true;
-    }
+//    public static boolean checkValueAdd(BuildingDTO buildingDTO) {
+//        if (!StringUtils.checkString(buildingDTO.getName()) ||
+//                !StringUtils.checkString(buildingDTO.getStructure()) ||
+//                !StringUtils.checkString(buildingDTO.getDistrict()) ||
+//                !StringUtils.checkString(buildingDTO.getWard()) ||
+//                !StringUtils.checkString(buildingDTO.getStreet()) ||
+//                !StringUtils.checkString(buildingDTO.getDirection()) ||
+//                !StringUtils.checkString(buildingDTO.getRentArea()) ||
+//                !StringUtils.checkString(buildingDTO.getServiceFee()) ||
+//                !StringUtils.checkString(buildingDTO.getElectricityFee()) ||
+//                !StringUtils.checkString(buildingDTO.getWaterFee()) ||
+//                !StringUtils.checkString(buildingDTO.getDeposit()) ||
+//                !StringUtils.checkString(buildingDTO.getBrokerageFee()) ||
+//
+//                !NumberUtils.checkNumber(buildingDTO.getNumberOfBasement()) ||
+//                !NumberUtils.checkNumber(buildingDTO.getRentPrice())) {
+//            return false;
+//        }
+//        return true;
+//    }
 
     public static String removeAccent(List<String> typeCodes) {
         String s = String.join(",", typeCodes);
@@ -117,8 +120,7 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    @Transactional
-    public BuildingDTO addBuilding(BuildingDTO buildingDTO) {
+    public BuildingDTO addBuilding(@Valid  BuildingDTO buildingDTO) {
 
         // ✅ Chuyển từ DTO -> Entity
         BuildingEntity buildingEntity = modelMapper.map(buildingDTO, BuildingEntity.class);
@@ -155,7 +157,6 @@ public class BuildingServiceImpl implements BuildingService {
 
 
     @Override
-    @Transactional
     public BuildingDTO updateBuilding(Long id, BuildingDTO buildingDTO) {
         // Kiểm tra tòa nhà có tồn tại không
         BuildingEntity existingBuilding = buildingRepository.findById(id)
@@ -189,7 +190,6 @@ public class BuildingServiceImpl implements BuildingService {
 
 
     @Override
-    @Transactional
     public void deleteBuilding(Long id) {
         // ✅ Kiểm tra xem tòa nhà có tồn tại không
         BuildingEntity existingBuilding = buildingRepository.findById(id)
