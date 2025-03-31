@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+//ném data qua view
 @Controller(value = "buildingControllerOfAdmin")
 public class BuildingController {
 

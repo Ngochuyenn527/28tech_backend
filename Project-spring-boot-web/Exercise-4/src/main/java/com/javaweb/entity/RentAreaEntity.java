@@ -13,14 +13,6 @@ public class RentAreaEntity extends BaseEntity {
     @JoinColumn(name = "buildingid")
     private BuildingEntity building;
 
-//    public BuildingEntity getBuildingEntity() {
-//        return building;
-//    }
-//
-//    public void setBuildingEntity(BuildingEntity buildingEntity) {
-//        this.building = buildingEntity;
-//    }
-
 
     public BuildingEntity getBuilding() {
         return building;

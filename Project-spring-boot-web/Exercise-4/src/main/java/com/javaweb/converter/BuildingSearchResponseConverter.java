@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//chứa kết quả tìm kiếm được trả ra
+//lấy dữ liệu từ Entity,  chuyển đổi dữ liệu thành Address và lấy ra rentArea rồi Response
 @Component
 public class BuildingSearchResponseConverter {
     @Autowired

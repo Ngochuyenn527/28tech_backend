@@ -63,15 +63,6 @@ public class BuildingEntity extends BaseEntity {
     @Column(name = "type")
     private String typeCode;
 
-
-//    // bổ sung thuộc tính từ bảng khác để DTO nhận được gtri lấy từ Entity
-//    @Column(name = "managername")
-//    private String managername;
-//
-//    @Column(name = "managerphonenumber")
-//    private String managerphonenumber;
-
-
     public String getName() {
         return name;
     }

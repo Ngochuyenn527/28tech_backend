@@ -15,9 +15,6 @@ public class BuildingSearchBuilder {
     private Long areaTo;
     private Long rentPriceFrom;
     private Long rentPriceTo;
-    //    private String managerName;
-//    private String managerPhone;
-//    private Long staffId;
     private List<String> typeCode;
 
     private BuildingSearchBuilder(Builder builder) {
@@ -95,9 +92,6 @@ public class BuildingSearchBuilder {
         private Long areaTo;
         private Long rentPriceFrom;
         private Long rentPriceTo;
-        //    private String managerName;
-//    private String managerPhone;
-//    private Long staffId;
         private List<String> typeCode;
 
 

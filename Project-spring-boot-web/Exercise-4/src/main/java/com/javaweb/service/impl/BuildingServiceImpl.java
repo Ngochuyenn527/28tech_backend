@@ -1,40 +1,27 @@
 package com.javaweb.service.impl;
 
 import com.javaweb.builder.BuildingSearchBuilder;
-import com.javaweb.converter.BuildingDTOConverter;
+import com.javaweb.converter.BuildingConverter;
 import com.javaweb.converter.BuildingSearchBuilderConverter;
 import com.javaweb.converter.BuildingSearchResponseConverter;
-import com.javaweb.converter.RentAreaConverter;
 import com.javaweb.entity.BuildingEntity;
-import com.javaweb.entity.RentAreaEntity;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.RentAreaRepository;
 import com.javaweb.service.BuildingService;
-import com.javaweb.service.RentAreaService;
-import com.javaweb.utils.NumberUtils;
-import com.javaweb.utils.StringUtils;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class BuildingServiceImpl implements BuildingService {
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Autowired
     private BuildingRepository buildingRepository;
@@ -45,33 +32,27 @@ public class BuildingServiceImpl implements BuildingService {
     @Autowired
     private BuildingSearchBuilderConverter buildingSearchBuilderConverter;
 
-    @Autowired
-    private RentAreaService rentAreaService;
 
     @Autowired
     private RentAreaRepository rentAreaRepository;
 
     @Autowired
-    private RentAreaConverter rentAreaConverter;
-
-    @Autowired
-    private BuildingDTOConverter buildingDTOConverter;
+    private BuildingConverter buildingConverter;
 
     @Override
     public BuildingDTO findById(Long id) {
-
         if (id == null) {
             throw new IllegalArgumentException("Building ID must not be null!");
         }
 
-//        return buildingRepository.findById(id)
-//                .map(building -> modelMapper.map(building, BuildingDTO.class)) // Chuyển đổi tự động
-//                .orElseThrow(() -> new RuntimeException("Không tìm thấy tòa nhà với ID: " + id));
+        // Tìm tòa nhà theo ID, nếu không có thì ném ngoại lệ
         BuildingEntity entity = buildingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy tòa nhà!"));
-        return buildingDTOConverter.toDTO(entity);
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy tòa nhà với ID: " + id));
 
+        // Chuyển đổi Entity -> DTO
+        return buildingConverter.toBuildingDTO(entity);
     }
+
 
     @Override
     public List<BuildingSearchResponse> searchBuildings(BuildingSearchRequest buildingSearchRequest) {
@@ -121,59 +102,33 @@ public class BuildingServiceImpl implements BuildingService {
 //    }
 //
 
-    public static String removeAccent(List<String> typeCodes) {
-        String s = String.join(",", typeCodes);
-        return Normalizer.normalize(s, Normalizer.Form.NFD) // Chuyển thành dạng decomposed
-                .replaceAll("\\p{M}", ""); // Xóa các dấu (accents)
-    }
 
-    private List<String> toTypeCodeList(String typeCode) {
-        if (typeCode == null || typeCode.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return Arrays.asList(typeCode.split(","));
-    }
+//    private List<String> toTypeCodeList(String typeCode) {
+//        if (typeCode == null || typeCode.isEmpty()) {
+//            return Collections.emptyList();
+//        }
+//        return Arrays.asList(typeCode.split(","));
+//    }
 
-    private String convertRentAreasToString(List<RentAreaEntity> rentAreas) {
-        return rentAreas.stream()
-                .map(ra -> String.valueOf(ra.getValue()))  // Lấy giá trị diện tích
-                .collect(Collectors.joining(","));
-    }
+//    private String convertRentAreasToString(List<RentAreaEntity> rentAreas) {
+//        return rentAreas.stream()
+//                .map(ra -> String.valueOf(ra.getValue()))  // Lấy giá trị diện tích
+//                .collect(Collectors.joining(","));
+//    }
 
     @Override
-    public BuildingDTO addBuilding(@Valid  BuildingDTO buildingDTO) {
+    public BuildingDTO addBuilding(@Valid BuildingDTO buildingDTO) {
 
         // ✅ Chuyển từ DTO -> Entity
-        BuildingEntity buildingEntity = modelMapper.map(buildingDTO, BuildingEntity.class);
+        BuildingEntity addbuildingEntity = buildingConverter.toBuildingEntity(buildingDTO);
 
-        // ✅ Lưu tòa nhà vào database để lấy ID (nếu là thêm mới)
-        buildingEntity = buildingRepository.save(buildingEntity);
-
-        // ✅ Xử lý danh sách diện tích thuê (RentArea)
-        if (StringUtils.checkString(buildingDTO.getRentArea())) {
-            // Xóa RentArea cũ để tránh trùng lặp
-            rentAreaRepository.deleteByBuilding(buildingEntity.getId());
-
-            // Chuyển chuỗi "100,200,300" thành danh sách RentAreaEntity
-            List<RentAreaEntity> newRentAreas = rentAreaConverter.convertRentAreaStringToEntities(buildingDTO.getRentArea(), buildingEntity);
-
-            // Gán danh sách mới cho Building
-            buildingEntity.setRentAreaEntities(newRentAreas);
-
-            // Thêm mới vào database
-            rentAreaService.addRentArea(buildingEntity);
-        }
+        // ✅ Thêm mới rentArea vào database
+        rentAreaRepository.saveAll(addbuildingEntity.getRentAreaEntities());
 
         // ✅ Lưu lại sau khi cập nhật danh sách RentArea
-        BuildingEntity savedBuilding = buildingRepository.save(buildingEntity);
+        buildingRepository.save(addbuildingEntity);
 
-        // ✅ Ánh xạ lại từ Entity -> DTO để trả về response
-        BuildingDTO savedBuildingDTO = modelMapper.map(savedBuilding, BuildingDTO.class);
-
-        // ✅ Chuyển danh sách RentAreaEntity -> String để hiển thị đúng trong API
-        savedBuildingDTO.setRentArea(convertRentAreasToString(savedBuilding.getRentAreaEntities()));
-
-        return savedBuildingDTO;
+        return buildingDTO;
     }
 
 
@@ -183,30 +138,21 @@ public class BuildingServiceImpl implements BuildingService {
         BuildingEntity existingBuilding = buildingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Building not found with id: " + id));
 
-        // Ánh xạ DTO -> Entity (tránh thay đổi ID)
-        modelMapper.map(buildingDTO, existingBuilding);
-        existingBuilding.setId(id); // Giữ nguyên ID
+        // Chuyển từ DTO -> Entity (giữ nguyên ID)
+        BuildingEntity updatedBuildingEntity = buildingConverter.toBuildingEntity(buildingDTO);
+        updatedBuildingEntity.setId(id);
 
-        // Xóa RentArea cũ
-        rentAreaRepository.deleteByBuilding(existingBuilding.getId());
+        // Xóa RentArea cũ trước khi cập nhật mới
+        rentAreaRepository.deleteByBuilding(id);
 
-        // Cập nhật danh sách RentArea từ DTO (tách chuỗi thành danh sách số)
-        if (StringUtils.checkString(buildingDTO.getRentArea())) {
-            List<RentAreaEntity> newRentAreas = rentAreaConverter.convertRentAreaStringToEntities(buildingDTO.getRentArea(), existingBuilding);
-            existingBuilding.setRentAreaEntities(newRentAreas);
-            rentAreaService.addRentArea(existingBuilding); // Gọi hàm thêm mới
-        }
+        // Thêm mới RentArea nếu có dữ liệu
+        rentAreaRepository.saveAll(updatedBuildingEntity.getRentAreaEntities());
+
 
         // Lưu thông tin tòa nhà đã cập nhật
-        BuildingEntity updatedBuilding = buildingRepository.save(existingBuilding);
+        buildingRepository.save(updatedBuildingEntity);
 
-        // Ánh xạ lại sang DTO
-        BuildingDTO updatedDTO = modelMapper.map(updatedBuilding, BuildingDTO.class);
-
-        // ✅ Chuyển danh sách RentAreaEntity -> String để hiển thị đúng trong API
-        updatedDTO.setRentArea(convertRentAreasToString(updatedBuilding.getRentAreaEntities()));
-
-        return updatedDTO;
+        return buildingDTO;
     }
 
 
@@ -222,7 +168,4 @@ public class BuildingServiceImpl implements BuildingService {
         // ✅ Xóa tòa nhà sau khi đã xóa RentArea
         buildingRepository.delete(existingBuilding);
     }
-
-
-
 }

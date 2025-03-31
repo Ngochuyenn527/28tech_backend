@@ -6,9 +6,7 @@ import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.service.BuildingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +27,7 @@ public class BuildingAPI {
 
 
     @PostMapping
-    public ResponseEntity<BuildingDTO> addBuilding( @RequestBody BuildingDTO buildingDTO) {
+    public ResponseEntity<BuildingDTO> addBuilding(@RequestBody BuildingDTO buildingDTO) {
         BuildingDTO savedBuilding = buildingService.addBuilding(buildingDTO);
         return ResponseEntity.ok(savedBuilding);
     }
