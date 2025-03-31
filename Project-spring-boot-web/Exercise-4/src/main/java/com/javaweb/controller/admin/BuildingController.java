@@ -69,9 +69,16 @@ public class BuildingController {
     public ModelAndView buildingEdit(@PathVariable("id") Long id, HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("admin/building/edit"); // Tạo một ModelAndView trỏ đến file giao diện (admin/building/edit.jsp
         //xuong db timf building theo id
-        BuildingDTO buildingDTO = new BuildingDTO();
-        buildingDTO.setId(id);
-        buildingDTO.setName("H Building");
+        BuildingDTO buildingDTO = buildingService.findById(id);
+
+//        BuildingDTO buildingDTO = new BuildingDTO();
+//        buildingDTO.setName(buildingService.findById(id).getName());
+//        buildingDTO.setStructure(buildingService.findById(id).getStructure());
+//        buildingDTO.setDistrict(District.districtMap().get(id));
+//        buildingDTO.setStreet(buildingService.findById(id).getStreet());
+//        buildingDTO.setWard(buildingService.findById(id).getWard());
+//        buildingDTO.setNumberOfBasement(buildingService.findById(id).getNumberOfBasement());
+//        buildingDTO.setDirection(buildingService.findById(id).getDirection());
 
         mav.addObject("districts", District.districtMap());
         mav.addObject("typeCodes", TypeCode.typeCodeMap());

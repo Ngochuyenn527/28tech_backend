@@ -23,15 +23,6 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
     private EntityManager entityManager;
 
     public static void joinTable(BuildingSearchBuilder buildingSearchBuilder, StringBuilder sql) {
-//        Long staffId = buildingSearchBuilder.getStaffId();
-//        if (NumberUtils.checkNumber(staffId)) {
-//            sql.append(" INNER JOIN assignmentbuilding ab ON b.id = ab.buildingid ");
-//        }
-//        List<String> typeCode = buildingSearchBuilder.getTypeCode();
-//        if (typeCode != null && typeCode.size() != 0) {
-//            sql.append(" INNER JOIN buildingrenttype brt ON b.id = brt.buildingid  ");
-//            sql.append(" INNER JOIN renttype ON renttype.id = brt.renttypeid ");
-//        }
 
         Long rentAreaTo = buildingSearchBuilder.getAreaTo();
         Long rentAreaFrom = buildingSearchBuilder.getAreaFrom();
@@ -68,10 +59,6 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
 
     // field phai join voi cac bang khac va cac cau querry tinh toan phuc tap cua chinh no
     public static void querySpecial(BuildingSearchBuilder buildingSearchBuilder, StringBuilder where) {
-//        Long staffId = buildingSearchBuilder.getStaffId();
-//        if (NumberUtils.checkNumber(staffId)) {
-//            where.append(" AND ab.staffid = " + staffId);
-//        }
 
         Long rentAreaTo = buildingSearchBuilder.getAreaTo();
         Long rentAreaFrom = buildingSearchBuilder.getAreaFrom();
@@ -96,14 +83,6 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
             }
         }
 
-        // java 7
-//		if (typeCode != null && typeCode.size() != 0) {
-//			List<String> code = new ArrayList<String>();
-//			for (String item : typeCode) {
-//				code.add("'" + item + "'");
-//			}
-//			where.append(" AND rt.code IN(" + String.join(",", code) + ")");
-//		}
 
         // java 8
         List<String> typeCode = buildingSearchBuilder.getTypeCode();

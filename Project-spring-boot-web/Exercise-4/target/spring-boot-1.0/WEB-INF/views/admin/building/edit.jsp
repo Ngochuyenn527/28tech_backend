@@ -34,11 +34,7 @@
                         </li>
                         <li class="active">Thêm tòa nhà</li>
                     </c:if>
-
-
                 </ul><!-- /.breadcrumb -->
-
-
             </div>
 
             <div class="page-content">
@@ -66,7 +62,6 @@
                                     <label class="col-xs-3">Tên tòa nhà</label>
                                     <div class="col-xs-9">
                                         <form:input id="name"  class="form-control" path="name"/>
-                                            <%--                                    <input type="text" name="name" id="name" class="form-control">--%>
                                     </div>
                                 </div>
 

@@ -11,7 +11,6 @@ import java.util.List;
 
 //@Component
 @Component
-
 // chuyển những giá trị của BuildingSearchRequest cần tìm kiếm thành BuildingSearchBuilder để giải quyết vấn đề Constructor có quá nhiều tham số
 // (có thể tham khảo builder pattern để hiểu rõ hơn)
 public class BuildingSearchBuilderConverter {

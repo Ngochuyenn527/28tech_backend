@@ -18,9 +18,6 @@ public class BuildingSearchRequest extends AbstractDTO {
     private Long areaTo;
     private Long rentPriceFrom;
     private Long rentPriceTo;
-    //    private String managerName;
-//    private String managerPhone;
-//    private Long staffId;
     private List<String> typeCode;
 
 
@@ -80,22 +77,6 @@ public class BuildingSearchRequest extends AbstractDTO {
         this.district = district;
     }
 
-//    public String getManagerName() {
-//        return managerName;
-//    }
-//
-//    public void setManagerName(String managerName) {
-//        this.managerName = managerName;
-//    }
-
-//    public String getManagerPhone() {
-//        return managerPhone;
-//    }
-//
-//    public void setManagerPhone(String managerPhone) {
-//        this.managerPhone = managerPhone;
-//    }
-
     public Long getRentPriceFrom() {
         return rentPriceFrom;
     }
@@ -127,14 +108,6 @@ public class BuildingSearchRequest extends AbstractDTO {
     public void setAreaTo(Long areaTo) {
         this.areaTo = areaTo;
     }
-
-//    public Long getStaffId() {
-//        return staffId;
-//    }
-//
-//    public void setStaffId(Long staffId) {
-//        this.staffId = staffId;
-//    }
 
     public String getDirection() {
         return direction;

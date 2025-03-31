@@ -16,7 +16,6 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api/building")
-//@Validated
 public class BuildingAPI {
 
     @Autowired
@@ -28,11 +27,6 @@ public class BuildingAPI {
         return res;
     }
 
-//    @PostMapping
-//    public ResponseEntity<BuildingDTO> addBuilding(@Valid @RequestBody BuildingDTO buildingDTO) {
-//        BuildingDTO savedBuilding = buildingService.addBuilding(buildingDTO);
-//        return ResponseEntity.ok(savedBuilding);
-//    }
 
     @PostMapping
     public ResponseEntity<BuildingDTO> addBuilding( @RequestBody BuildingDTO buildingDTO) {
@@ -41,20 +35,11 @@ public class BuildingAPI {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BuildingDTO> updateBuilding(@Valid@PathVariable Long id, @RequestBody BuildingDTO buildingDTO) {
+    public ResponseEntity<BuildingDTO> updateBuilding(@Valid @PathVariable Long id, @RequestBody BuildingDTO buildingDTO) {
         BuildingDTO updatedBuilding = buildingService.updateBuilding(id, buildingDTO);
         return ResponseEntity.ok(updatedBuilding);
     }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<String> deleteBuilding(@PathVariable Long id) {
-//        try {
-//            buildingService.deleteBuilding(id);
-//            return ResponseEntity.ok("Deleted building successfully with id: " + id);
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-//        }
-//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBuilding(@PathVariable Long id) {

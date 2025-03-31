@@ -1,6 +1,7 @@
 package com.javaweb.service.impl;
 
 import com.javaweb.builder.BuildingSearchBuilder;
+import com.javaweb.converter.BuildingDTOConverter;
 import com.javaweb.converter.BuildingSearchBuilderConverter;
 import com.javaweb.converter.BuildingSearchResponseConverter;
 import com.javaweb.converter.RentAreaConverter;
@@ -53,6 +54,25 @@ public class BuildingServiceImpl implements BuildingService {
     @Autowired
     private RentAreaConverter rentAreaConverter;
 
+    @Autowired
+    private BuildingDTOConverter buildingDTOConverter;
+
+    @Override
+    public BuildingDTO findById(Long id) {
+
+        if (id == null) {
+            throw new IllegalArgumentException("Building ID must not be null!");
+        }
+
+//        return buildingRepository.findById(id)
+//                .map(building -> modelMapper.map(building, BuildingDTO.class)) // Chuyển đổi tự động
+//                .orElseThrow(() -> new RuntimeException("Không tìm thấy tòa nhà với ID: " + id));
+        BuildingEntity entity = buildingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy tòa nhà!"));
+        return buildingDTOConverter.toDTO(entity);
+
+    }
+
     @Override
     public List<BuildingSearchResponse> searchBuildings(BuildingSearchRequest buildingSearchRequest) {
 
@@ -99,6 +119,7 @@ public class BuildingServiceImpl implements BuildingService {
 //        }
 //        return true;
 //    }
+//
 
     public static String removeAccent(List<String> typeCodes) {
         String s = String.join(",", typeCodes);

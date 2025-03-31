@@ -13,9 +13,6 @@ import java.util.List;
 
 @Repository
 public interface RentAreaRepository extends JpaRepository<RentAreaEntity, Long> {
-    //Spring Data JPA sẽ tự động triển khai truy vấn này mà không cần viết SQL.
-    // Tìm danh sách RentAreaEntity theo Building
-    List<RentAreaEntity> findByBuilding(BuildingEntity building);
 
     // Xóa tất cả RentArea theo Building
     @Modifying

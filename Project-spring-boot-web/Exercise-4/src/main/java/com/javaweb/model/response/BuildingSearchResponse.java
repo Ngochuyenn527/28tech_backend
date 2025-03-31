@@ -6,30 +6,15 @@ import com.javaweb.model.dto.AbstractDTO;
 
 //trả ra bảng dữ liệu tìm kiếm được (bảng 2)
 public class BuildingSearchResponse extends AbstractDTO {
-    private Long id;
     private String name;
     private String structure;
     private String address;
     private Long numberOfBasement;
     private String direction;
-    //	private String managerName;
-//	private String managerPhone;
-//	private Long floorArea;
     private String rentArea;
-    //    private String emptyArea;
     private Long rentPrice;
     private String serviceFee;
     private String brokerageFee;
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

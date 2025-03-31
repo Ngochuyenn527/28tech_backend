@@ -7,14 +7,17 @@ import com.javaweb.model.response.BuildingSearchResponse;
 import java.util.List;
 
 public interface BuildingService {
+
+    BuildingDTO findById(Long id);
+
     List<BuildingSearchResponse> searchBuildings(BuildingSearchRequest buildingSearchRequest);
 
-    public BuildingDTO addBuilding(BuildingDTO buildingDTO);
+    BuildingDTO addBuilding(BuildingDTO buildingDTO);
 
-    public BuildingDTO updateBuilding(Long id, BuildingDTO buildingDTO);
+    BuildingDTO updateBuilding(Long id, BuildingDTO buildingDTO);
 
-    public void deleteBuilding(Long id);
+    void deleteBuilding(Long id);
 
-    public int countTotalItems(List<BuildingSearchResponse> list);
+    int countTotalItems(List<BuildingSearchResponse> list);
 
 }
