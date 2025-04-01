@@ -10,7 +10,7 @@ public class RentAreaEntity extends BaseEntity {
     private Long value;
 
     @ManyToOne
-    @JoinColumn(name = "buildingid")
+    @JoinColumn(name = "buildingid", nullable = false)
     private BuildingEntity building;
 
 

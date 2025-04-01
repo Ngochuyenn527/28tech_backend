@@ -29,7 +29,6 @@ public class BuildingDTO extends AbstractDTO {
 
     @NotNull(message = "Số tầng hầm không được để trống")
     @PositiveOrZero(message = "Số tầng hầm không được là số âm")
-    @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
     private Long numberOfBasement;
 
     @NotBlank(message = "Hướng không được để trống")
@@ -42,32 +41,26 @@ public class BuildingDTO extends AbstractDTO {
 
     @NotNull(message = "Giá thuê không được để trống")
     @Positive(message = "Giá thuê phải là số dương")
-    @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
     private Long rentPrice;
 
     @NotBlank(message = "Phí dịch vụ không được để trống")
     @Positive(message = "Phí dịch vụ phải là số dương")
-    @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
     private String serviceFee;
 
     @NotBlank(message = "Phí điện không được để trống")
     @Positive(message = "Phí điện phải là số dương")
-    @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
     private String electricityFee;
 
     @NotBlank(message = "Phí nước không được để trống")
     @Positive(message = "Phí nước phải là số dương")
-    @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
     private String waterFee;
 
     @NotBlank(message = "Tiền đặt cọc không được để trống")
     @Positive(message = "Tiền đặt cọc phải là số dương")
-    @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
     private String deposit;
 
     @NotBlank(message = "Phí môi giới không được để trống")
     @Positive(message = "Phí môi giới phải là số dương")
-    @Pattern(regexp = "^[0-9]+$", message = "Chỉ được nhập số")
     private String brokerageFee;
 
     private List<String> typeCode; // Danh sách loại tòa nhà có thể để trống

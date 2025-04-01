@@ -9,7 +9,6 @@ import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.repository.BuildingRepository;
-import com.javaweb.repository.RentAreaRepository;
 import com.javaweb.service.BuildingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +30,6 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Autowired
     private BuildingSearchBuilderConverter buildingSearchBuilderConverter;
-
-
-    @Autowired
-    private RentAreaRepository rentAreaRepository;
 
     @Autowired
     private BuildingConverter buildingConverter;
@@ -119,53 +114,57 @@ public class BuildingServiceImpl implements BuildingService {
     @Override
     public BuildingDTO addBuilding(@Valid BuildingDTO buildingDTO) {
 
-        // ✅ Chuyển từ DTO -> Entity
-        BuildingEntity addbuildingEntity = buildingConverter.toBuildingEntity(buildingDTO);
+        try {
+            // ✅ Chuyển từ DTO -> Entity
+            BuildingEntity addbuildingEntity = buildingConverter.toBuildingEntity(buildingDTO);
 
-        // ✅ Thêm mới rentArea vào database
-        rentAreaRepository.saveAll(addbuildingEntity.getRentAreaEntities());
+            // ✅ Lưu lại tòa nhà (RentAreaEntities sẽ được lưu tự động nếu đã cấu hình cascade)
+            buildingRepository.save(addbuildingEntity);
 
-        // ✅ Lưu lại sau khi cập nhật danh sách RentArea
-        buildingRepository.save(addbuildingEntity);
+            return buildingDTO;
 
-        return buildingDTO;
+        } catch (Exception e) {
+            throw new RuntimeException("Có lỗi xảy ra khi thêm tòa nhà: " + e.getMessage());
+        }
     }
 
 
     @Override
-    public BuildingDTO updateBuilding(Long id, BuildingDTO buildingDTO) {
-        // Kiểm tra tòa nhà có tồn tại không
-        BuildingEntity existingBuilding = buildingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Building not found with id: " + id));
+    public BuildingDTO updateBuilding(@Valid Long id, BuildingDTO buildingDTO) {
+        try {
+            // ✅ Kiểm tra tòa nhà có tồn tại không
+            BuildingEntity existingBuilding = buildingRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Tòa nhà không tồn tại với ID: " + id));
 
-        // Chuyển từ DTO -> Entity (giữ nguyên ID)
-        BuildingEntity updatedBuildingEntity = buildingConverter.toBuildingEntity(buildingDTO);
-        updatedBuildingEntity.setId(id);
+            // ✅ Chuyển từ DTO -> Entity (giữ nguyên ID)
+            BuildingEntity updatedBuildingEntity = buildingConverter.toBuildingEntity(buildingDTO);
+            updatedBuildingEntity.setId(id);
 
-        // Xóa RentArea cũ trước khi cập nhật mới
-        rentAreaRepository.deleteByBuilding(id);
+            // ✅ Lưu thông tin tòa nhà đã cập nhật (bao gồm cả RentAreaEntities nếu có cascade)
+            buildingRepository.save(updatedBuildingEntity);
 
-        // Thêm mới RentArea nếu có dữ liệu
-        rentAreaRepository.saveAll(updatedBuildingEntity.getRentAreaEntities());
+            return buildingDTO;
 
-
-        // Lưu thông tin tòa nhà đã cập nhật
-        buildingRepository.save(updatedBuildingEntity);
-
-        return buildingDTO;
+        } catch (RuntimeException e) {
+            // ✅ Xử lý ngoại lệ nếu không tìm thấy tòa nhà hoặc có lỗi trong quá trình cập nhật
+            throw new RuntimeException("Có lỗi xảy ra khi cập nhật tòa nhà: " + e.getMessage());
+        }
     }
 
 
     @Override
     public void deleteBuilding(Long id) {
-        // ✅ Kiểm tra xem tòa nhà có tồn tại không
-        BuildingEntity existingBuilding = buildingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Building not found with id: " + id));
+        try {
+            // ✅ Kiểm tra tòa nhà có tồn tại không
+            BuildingEntity existingBuilding = buildingRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Tòa nhà không tồn tại với ID: " + id));
 
-        // ✅ Xóa tất cả RentArea liên quan trước
-        rentAreaRepository.deleteByBuilding(existingBuilding.getId());
+            // ✅ Xóa tòa nhà khỏi cơ sở dữ liệu
+            buildingRepository.delete(existingBuilding);
 
-        // ✅ Xóa tòa nhà sau khi đã xóa RentArea
-        buildingRepository.delete(existingBuilding);
+        } catch (RuntimeException e) {
+            // ✅ Xử lý ngoại lệ nếu không tìm thấy tòa nhà hoặc có lỗi trong quá trình xóa
+            throw new RuntimeException("Có lỗi xảy ra khi xóa tòa nhà: " + e.getMessage());
+        }
     }
 }

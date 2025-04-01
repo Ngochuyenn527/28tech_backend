@@ -31,7 +31,9 @@ public class BuildingEntity extends BaseEntity {
     @Column(name = "direction")
     private String direction;
 
-    @OneToMany(mappedBy = "building", fetch = FetchType.EAGER)
+    //update => sử dụng cascade  → Khi thêm, sửa, xóa BuildingEntity, Hibernate sẽ tự động thao tác với RentAreaEntity.
+    //orphanRemoval = true → Nếu một RentAreaEntity bị loại khỏi danh sách rentAreaEntities, nó cũng bị xóa khỏi database.
+    @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<RentAreaEntity> rentAreaEntities = new ArrayList<RentAreaEntity>();
 
     public List<RentAreaEntity> getRentAreaEntities() {

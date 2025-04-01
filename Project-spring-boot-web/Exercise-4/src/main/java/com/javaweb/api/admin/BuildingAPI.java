@@ -7,6 +7,7 @@ import com.javaweb.service.BuildingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api/building")
+@Validated
 public class BuildingAPI {
 
     @Autowired
@@ -27,7 +29,7 @@ public class BuildingAPI {
 
 
     @PostMapping
-    public ResponseEntity<BuildingDTO> addBuilding(@RequestBody BuildingDTO buildingDTO) {
+    public ResponseEntity<BuildingDTO> addBuilding(@Valid @RequestBody BuildingDTO buildingDTO) {
         BuildingDTO savedBuilding = buildingService.addBuilding(buildingDTO);
         return ResponseEntity.ok(savedBuilding);
     }
@@ -42,7 +44,7 @@ public class BuildingAPI {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBuilding(@PathVariable Long id) {
         buildingService.deleteBuilding(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Deleted successfully!");
     }
 
 
