@@ -56,12 +56,12 @@
                         <div class="col-xs-12 ">
                             <form class="form-horizontal" role="form">
 
-                                <form:hidden path="id" id="buildingId"></form:hidden>
+                                <form:hidden path="id" id="id"></form:hidden>
 
                                 <div class="form-group">
                                     <label class="col-xs-3">Tên tòa nhà</label>
                                     <div class="col-xs-9">
-                                        <form:input id="name"  class="form-control" path="name"/>
+                                        <form:input id="name" class="form-control" path="name"/>
                                     </div>
                                 </div>
 
@@ -77,7 +77,7 @@
                                     <div class="col-xs-2">
                                         <form:select id="district" class="form-control" path="district">
                                             <form:option value="">---Chọn Quận---</form:option>
-                                            <form:options  items="${districts}"></form:options>
+                                            <form:options items="${districts}"></form:options>
                                         </form:select>
                                     </div>
                                 </div>
@@ -113,7 +113,7 @@
                                 <div class="form-group">
                                     <label class="col-xs-3">Diện tích thuê</label>
                                     <div class="col-xs-9">
-                                        <form:input id="rentArea" class="form-control" path="rentArea"/>
+                                        <form:input id="rentArea" class="form-control" path="rentArea" placeholder="Ví dụ: 500, 600"/>
                                     </div>
                                 </div>
 
@@ -182,7 +182,7 @@
                                         </c:if>
 
                                         <c:if test="${empty modelBuildingEdit.id}">
-                                            <button type="submit" class="btn btn-success" id="btnAddBuilding" >
+                                            <button type="submit" class="btn btn-success" id="btnAddBuilding">
                                                 Thêm tòa
                                                 nhà
                                             </button>
@@ -203,110 +203,126 @@
 
 <script>
 
-$(document).ready(function () {
+    $(document).ready(function () {
 
-    // Thêm tòa nhà
-    $("#btnAddBuilding").click(function () {
-        let buildingData = {
-            name: $("#name").val(),
-            structure: $("#structure").val(),
-            district: $("#district").val(),
-            ward: $("#ward").val(),
-            street: $("#street").val(),
-            numberOfBasement: $("#numberOfBasement").val(),
-            direction: $("#direction").val(),
-            rentArea: $("#rentArea").val(),
-            rentPrice: $("#rentPrice").val(),
-            serviceFee: $("#serviceFee").val(),
-            waterFee: $("#waterFee").val(),
-            electricityFee: $("#electricityFee").val(),
-            deposit: $("#deposit").val(),
-            brokerageFee: $("#brokerageFee").val(),
-            typeCode: []
-        };
+        // Thêm tòa nhà
+        $("#btnAddBuilding").click(function () {
+            let buildingData = {
+                name: $("#name").val(),
+                structure: $("#structure").val(),
+                district: $("#district").val(),
+                ward: $("#ward").val(),
+                street: $("#street").val(),
+                numberOfBasement: $("#numberOfBasement").val(),
+                direction: $("#direction").val(),
+                rentArea: $("#rentArea").val(),
+                rentPrice: $("#rentPrice").val(),
+                serviceFee: $("#serviceFee").val(),
+                waterFee: $("#waterFee").val(),
+                electricityFee: $("#electricityFee").val(),
+                deposit: $("#deposit").val(),
+                brokerageFee: $("#brokerageFee").val(),
+                typeCode: []
+            };
 
-        $("input[name='typeCode']:checked").each(function () {
-            buildingData.typeCode.push($(this).val());
+            $("input[name='typeCode']:checked").each(function () {
+                buildingData.typeCode.push($(this).val());
+            });
+
+            $.ajax({
+                // url: "http://localhost:8081/api/building",
+                url: "${buildingAPI}",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(buildingData),
+                success: function (response) {
+                    alert("Thêm tòa nhà thành công!");
+                    location.reload();
+                },
+                error: function (error) {
+                    alert("Lỗi khi thêm tòa nhà: " + error.responseText);
+                }
+            });
         });
 
-        $.ajax({
-            // url: "http://localhost:8081/api/building",
-            url: "${buildingAPI}",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(buildingData),
-            success: function (response) {
-                alert("Thêm tòa nhà thành công!");
-                location.reload();
-            },
-            error: function (error) {
-                alert("Lỗi khi thêm tòa nhà: " + error.responseText);
+
+        // Gắn sự kiện click cho nút "Cập nhật"
+        $("#btnEditBuilding").click(function (e) {
+            e.preventDefault();
+            // Lấy dữ liệu từ form
+            let buildingData = {
+                id: $("#id").val(),
+                name: $("#name").val(),
+                structure: $("#structure").val(),
+                district: $("#district").val(),
+                ward: $("#ward").val(),
+                street: $("#street").val(),
+                numberOfBasement: $("#numberOfBasement").val(),
+                direction: $("#direction").val(),
+                rentArea: $("#rentArea").val(),
+                rentPrice: $("#rentPrice").val(),
+                serviceFee: $("#serviceFee").val(),
+                waterFee: $("#waterFee").val(),
+                electricityFee: $("#electricityFee").val(),
+                deposit: $("#deposit").val(),
+                brokerageFee: $("#brokerageFee").val(),
+                typeCode: []
+            };
+
+            $("input[name='typeCode']:checked").each(function () {
+                buildingData.typeCode.push($(this).val());
+            });
+
+
+            if (!buildingData.id || buildingData.id === "undefined" || isNaN(buildingData.id)) {
+                console.error("ID tòa nhà không hợp lệ:", buildingData.id);
+                alert("Không thể cập nhật: ID tòa nhà không hợp lệ!");
+                return;
             }
-        });
-    });
 
-    // Sửa tòa nhà
-    $("#btnEditBuilding").click(function () {
-        let buildingId = $(this).data("id");
+            console.log("Dữ liệu gửi đi:", buildingData);
 
-        $.get("${buildingAPI}" + "/" + buildingId, function (data) {
-            $("#name").val(data.name);
-            $("#structure").val(data.structure);
-            $("#district").val(data.district);
-            $("#ward").val(data.ward);
-            $("#street").val(data.street);
-            $("#numberOfBasement").val(data.numberOfBasement);
-            $("#direction").val(data.direction);
-            $("#rentArea").val(data.rentArea);
-            $("#rentPrice").val(data.rentPrice);
-            $("#serviceFee").val(data.serviceFee);
-            $("#brokerageFee").val(data.brokerageFee);
+            // Gửi yêu cầu cập nhật qua API
+            $.ajax({
+                url: "/api/building/" + buildingData.id,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(buildingData),
+                success: function (response) {
+                    console.log("Cập nhật thành công!", response);
+                    alert("Cập nhật thành công!");
+                    location.reload();
+                    // Cập nhật lại bảng
+                    updateRowInTable(buildingData);
+                },
+                error: function (err) {
+                    console.error("Lỗi khi cập nhật tòa nhà: ", err);
+                    alert("Lỗi khi cập nhật: " + err.responseText);
 
-            // Cập nhật typeCode (checkbox)
-            $("input[name='typeCode']").prop("checked", false);
-            data.typeCode.forEach(code => {
-                $("input[name='typeCode'][value='" + code + "']").prop("checked", true);
-            });
-
-            $("#modalBuilding").modal("show");
-
-            $("#btnEditBuilding").off("click").on("click", function () {
-                let updatedData = {
-                    name: $("#name").val(),
-                    structure: $("#structure").val(),
-                    district: $("#district").val(),
-                    ward: $("#ward").val(),
-                    street: $("#street").val(),
-                    numberOfBasement: $("#numberOfBasement").val(),
-                    direction: $("#direction").val(),
-                    rentArea: $("#rentArea").val(),
-                    rentPrice: $("#rentPrice").val(),
-                    serviceFee: $("#serviceFee").val(),
-                    brokerageFee: $("#brokerageFee").val(),
-                    typeCode: []
-                };
-
-                $("input[name='typeCode']:checked").each(function () {
-                    updatedData.typeCode.push($(this).val());
-                });
-
-                $.ajax({
-                    url: "${buildingAPI}" + "/" + buildingId,
-                    type: "PUT",
-                    contentType: "application/json",
-                    data: JSON.stringify(updatedData),
-                    success: function () {
-                        alert("Cập nhật thành công!");
-                        location.reload();
-                    },
-                    error: function (error) {
-                        alert("Lỗi khi cập nhật: " + error.responseText);
-                    }
-                });
+                }
             });
         });
     });
-});
+
+    function updateRowInTable(building) {
+    let row = $("#row-" + building.id);
+    if (row.length === 0) {
+        console.error("Không tìm thấy hàng với ID: " + building.id);
+        return;
+    }
+
+    console.log("Dữ liệu cập nhật:", building);
+
+    row.find("td").eq(0).text(building.name || '');
+    row.find("td").eq(1).text(building.structure || '');
+    row.find("td").eq(2).text(building.district + ', ' + building.ward + ', ' + building.street || '');
+    row.find("td").eq(3).text(building.numberOfBasement || '');
+    row.find("td").eq(4).text(building.direction || '');
+    row.find("td").eq(5).text(building.rentArea || '');
+    row.find("td").eq(6).text((building.rentPrice || '') + ' triệu/m²');
+    row.find("td").eq(7).text(building.serviceFee || '');
+    row.find("td").eq(8).text(building.brokerageFee || '');
+}
 
 
 </script>

@@ -5,6 +5,7 @@ import com.javaweb.converter.BuildingConverter;
 import com.javaweb.converter.BuildingSearchBuilderConverter;
 import com.javaweb.converter.BuildingSearchResponseConverter;
 import com.javaweb.entity.BuildingEntity;
+import com.javaweb.entity.RentAreaEntity;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -74,42 +76,6 @@ public class BuildingServiceImpl implements BuildingService {
         return (list != null) ? list.size() : 0;
     }
 
-
-//    public static boolean checkValueAdd(BuildingDTO buildingDTO) {
-//        if (!StringUtils.checkString(buildingDTO.getName()) ||
-//                !StringUtils.checkString(buildingDTO.getStructure()) ||
-//                !StringUtils.checkString(buildingDTO.getDistrict()) ||
-//                !StringUtils.checkString(buildingDTO.getWard()) ||
-//                !StringUtils.checkString(buildingDTO.getStreet()) ||
-//                !StringUtils.checkString(buildingDTO.getDirection()) ||
-//                !StringUtils.checkString(buildingDTO.getRentArea()) ||
-//                !StringUtils.checkString(buildingDTO.getServiceFee()) ||
-//                !StringUtils.checkString(buildingDTO.getElectricityFee()) ||
-//                !StringUtils.checkString(buildingDTO.getWaterFee()) ||
-//                !StringUtils.checkString(buildingDTO.getDeposit()) ||
-//                !StringUtils.checkString(buildingDTO.getBrokerageFee()) ||
-//
-//                !NumberUtils.checkNumber(buildingDTO.getNumberOfBasement()) ||
-//                !NumberUtils.checkNumber(buildingDTO.getRentPrice())) {
-//            return false;
-//        }
-//        return true;
-//    }
-//
-
-
-//    private List<String> toTypeCodeList(String typeCode) {
-//        if (typeCode == null || typeCode.isEmpty()) {
-//            return Collections.emptyList();
-//        }
-//        return Arrays.asList(typeCode.split(","));
-//    }
-
-//    private String convertRentAreasToString(List<RentAreaEntity> rentAreas) {
-//        return rentAreas.stream()
-//                .map(ra -> String.valueOf(ra.getValue()))  // Lấy giá trị diện tích
-//                .collect(Collectors.joining(","));
-//    }
 
     @Override
     public BuildingDTO addBuilding(@Valid BuildingDTO buildingDTO) {

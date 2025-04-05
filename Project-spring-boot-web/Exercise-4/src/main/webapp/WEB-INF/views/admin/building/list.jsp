@@ -222,19 +222,6 @@
                                 <display:column headerClass="text-left" property="brokerageFee"
                                                 title="Phí môi giới"/>
                                 <display:column headerClass="col-actions" title="Thao tác">
-                                    <%--                                                                        <a class="btn btn-xs btn-success" title="Giao tòa nhà"--%>
-                                    <%--                                                                           onclick="assignmentBuilding(${tableList.id})">--%>
-                                    <%--                                                                            <i class="ace-icon glyphicon glyphicon-list"></i>--%>
-                                    <%--                                                                        </a>--%>
-
-                                    <%--                                                                        <a class="btn btn-xs btn-info" title="Sửa tòa nhà"--%>
-                                    <%--                                                                           href="/admin/building-edit-${tableList.id}">--%>
-                                    <%--                                                                            <i class="ace-icon fa fa-pencil bigger-120"></i>--%>
-                                    <%--                                                                        </a>--%>
-
-                                    <%--                                                                        <button class="btn btn-xs btn-danger" title="Xóa tòa nhà"--%>
-                                    <%--                                                                                onclick="deleteBuilding(${tableList.id})" id="btnDeleteBuilding">--%>
-                                    <%--                                                                            <i class="ace-icon fa fa-trash-o bigger-120"></i>--%>
                                 </display:column>
                             </display:table>
                         </form:form>
@@ -376,7 +363,7 @@
                 '<a class="btn btn-xs btn-success" title="Giao tòa nhà" onclick="assignmentBuilding(' + building.id + ')">' +
                 '<i class="ace-icon glyphicon glyphicon-list"></i>' +
                 '</a>' +
-                '<a class="btn btn-xs btn-info" title="Sửa tòa nhà" href="/admin/building-edit-' + building.id + '">' +
+                '<a class="btn btn-xs btn-info edit-building" title="Sửa tòa nhà" href="/admin/building-edit-' + building.id + '">' +
                 '<i class="ace-icon fa fa-pencil bigger-120"></i>' +
                 '</a>' +
                 '<button class="btn btn-xs btn-danger delete-building" title="Xóa tòa nhà" data-id="' + building.id + '">' +
@@ -401,7 +388,60 @@
         }
     });
 
-    // Gắn sự kiện và định nghĩa hàm xóa bên ngoài
+    // Sự kiện click cho nút "Sửa"
+    $(document).ready(function () {
+        // Gắn sự kiện click cho nút "Sửa"
+        $("#tableList").on("click", ".edit-building", function () {
+            let buildingId = $(this).data("id");
+            if (!buildingId || buildingId === "undefined" || isNaN(buildingId)) {
+                console.error("ID tòa nhà không hợp lệ:", buildingId);
+                return;
+            }
+
+            // Gọi API để lấy thông tin chi tiết của tòa nhà
+            $.ajax({
+                url: '/api/building/' + buildingId,
+                type: 'GET',
+                success: function (data) {
+                    // Điền dữ liệu vào form
+                    $("#name").val(data.name);
+                    $("#structure").val(data.structure);
+                    $("#district").val(data.district);
+                    $("#ward").val(data.ward);
+                    $("#street").val(data.street);
+                    $("#numberOfBasement").val(data.numberOfBasement);
+                    $("#direction").val(data.direction);
+                    // Xử lý rentArea
+                    $("#rentArea").val(data.rentArea || '');
+                    $("#rentPrice").val(data.rentPrice);
+                    $("#serviceFee").val(data.serviceFee);
+                    $("#waterFee").val(data.waterFee);
+                    $("#electricityFee").val(data.electricityFee);
+                    $("#depositFee").val(data.deposit);
+                    $("#brokerageFee").val(data.brokerageFee);
+
+                    // Cập nhật typeCode (checkbox)
+                    // $("input[name='typeCode']").prop("checked", false);
+                    // data.typeCode.forEach(code => {
+                    //     $("input[name='typeCode'][value='" + code + "']").prop("checked", true);
+                    // });
+                    // Điền typeCode
+                if (data.typeCode && Array.isArray(data.typeCode)) {
+                    data.typeCode.forEach(type => {
+                        $(`input[name='typeCode'][value='${typeCodes}']`).prop('checked', true);
+                    });
+                }
+
+                },
+                error: function (err) {
+                    console.error("Lỗi khi lấy thông tin tòa nhà: ", err);
+                }
+            });
+        });
+    });
+
+
+    //XÓA
     $(document).ready(function () {
         $("#tableList").on("click", ".delete-building", function () {
             let buildingId = $(this).data("id"); // Cách 1
@@ -436,8 +476,6 @@
             });
         }
     }
-
-
 
 
 </script>

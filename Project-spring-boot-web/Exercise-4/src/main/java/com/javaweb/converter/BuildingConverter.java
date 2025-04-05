@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.Normalizer;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Component
 public class BuildingConverter {
+
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
@@ -23,11 +26,23 @@ public class BuildingConverter {
                 .replaceAll("\\p{M}", ""); // Xóa các dấu (accents)
     }
 
-
-    public BuildingDTO toBuildingDTO(BuildingEntity buildingEntity) {
-        return modelMapper.map(buildingEntity, BuildingDTO.class);
+    //chuyển đổi typeCode được lưu ở DB (be) là dạng String thành List ở DTO (fe)
+    public List<String> toTypeCodeList(String typeCode) {
+        if (typeCode == null || typeCode.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(typeCode.split(","));
     }
 
+    //chuyển đổi BuildingEntity (be) thành BuildingDTO (fe) dùng modelMapper
+    public BuildingDTO toBuildingDTO(BuildingEntity buildingEntity) {
+        BuildingDTO buildingDTO = modelMapper.map(buildingEntity, BuildingDTO.class);
+        buildingDTO.setTypeCode(toTypeCodeList(buildingEntity.getTypeCode()));
+        buildingDTO.setRentArea(rentAreaConverter.convertRentAreaEntityToString(buildingEntity.getRentAreaEntities()));
+        return buildingDTO;
+    }
+
+    //chuyển đổi BuildingDTO (fe) thành BuildingEntity (be) dùng modelMapper
     public BuildingEntity toBuildingEntity(BuildingDTO buildingDTO) {
         BuildingEntity buildingEntity = modelMapper.map(buildingDTO, BuildingEntity.class);
         buildingEntity.setTypeCode(removeAccent(buildingDTO.getTypeCode()));

@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
 @Table(name = "building")
 // Lưu trữ dữ liệu của tòa nhà, ánh xạ trực tiếp với bảng building trong database.

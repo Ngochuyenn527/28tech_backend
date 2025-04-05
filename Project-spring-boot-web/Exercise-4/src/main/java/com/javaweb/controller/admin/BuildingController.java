@@ -72,15 +72,6 @@ public class BuildingController {
         //xuong db timf building theo id
         BuildingDTO buildingDTO = buildingService.findById(id);
 
-//        BuildingDTO buildingDTO = new BuildingDTO();
-//        buildingDTO.setName(buildingService.findById(id).getName());
-//        buildingDTO.setStructure(buildingService.findById(id).getStructure());
-//        buildingDTO.setDistrict(District.districtMap().get(id));
-//        buildingDTO.setStreet(buildingService.findById(id).getStreet());
-//        buildingDTO.setWard(buildingService.findById(id).getWard());
-//        buildingDTO.setNumberOfBasement(buildingService.findById(id).getNumberOfBasement());
-//        buildingDTO.setDirection(buildingService.findById(id).getDirection());
-
         mav.addObject("districts", District.districtMap());
         mav.addObject("typeCodes", TypeCode.typeCodeMap());
         mav.addObject("modelBuildingEdit", buildingDTO);
