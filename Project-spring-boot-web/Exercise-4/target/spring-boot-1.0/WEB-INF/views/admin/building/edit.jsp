@@ -131,7 +131,6 @@
                                     </div>
                                 </div>
 
-
                                 <div class="form-group">
                                     <label class="col-xs-3">Tiền 1 số điện</label>
                                     <div class="col-xs-9">
@@ -219,6 +218,9 @@ $(document).ready(function () {
             rentArea: $("#rentArea").val(),
             rentPrice: $("#rentPrice").val(),
             serviceFee: $("#serviceFee").val(),
+            waterFee: $("#waterFee").val(),
+            electricityFee: $("#electricityFee").val(),
+            deposit: $("#deposit").val(),
             brokerageFee: $("#brokerageFee").val(),
             typeCode: []
         };

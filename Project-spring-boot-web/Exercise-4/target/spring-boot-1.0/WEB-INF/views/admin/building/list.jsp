@@ -157,7 +157,7 @@
                                             <div class="col-xs-12">
                                                 <div class="col-xs-6">
                                                     <button type="submit" class="btn btn-info"
-                                                            id="btnSearchBuilding" >
+                                                            id="btnSearchBuilding">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16"
                                                              height="16" fill="currentColor" class="bi bi-search"
                                                              viewBox="0 0 16 16">
@@ -221,22 +221,20 @@
                                 <display:column headerClass="text-left" property="serviceFee" title="Phí dịch vụ"/>
                                 <display:column headerClass="text-left" property="brokerageFee"
                                                 title="Phí môi giới"/>
-
                                 <display:column headerClass="col-actions" title="Thao tác">
-<%--                                                                        <a class="btn btn-xs btn-success" title="Giao tòa nhà"--%>
-<%--                                                                           onclick="assignmentBuilding(${tableList.id})">--%>
-<%--                                                                            <i class="ace-icon glyphicon glyphicon-list"></i>--%>
-<%--                                                                        </a>--%>
+                                    <%--                                                                        <a class="btn btn-xs btn-success" title="Giao tòa nhà"--%>
+                                    <%--                                                                           onclick="assignmentBuilding(${tableList.id})">--%>
+                                    <%--                                                                            <i class="ace-icon glyphicon glyphicon-list"></i>--%>
+                                    <%--                                                                        </a>--%>
 
-<%--                                                                        <a class="btn btn-xs btn-info" title="Sửa tòa nhà"--%>
-<%--                                                                           href="/admin/building-edit-${tableList.id}">--%>
-<%--                                                                            <i class="ace-icon fa fa-pencil bigger-120"></i>--%>
-<%--                                                                        </a>--%>
+                                    <%--                                                                        <a class="btn btn-xs btn-info" title="Sửa tòa nhà"--%>
+                                    <%--                                                                           href="/admin/building-edit-${tableList.id}">--%>
+                                    <%--                                                                            <i class="ace-icon fa fa-pencil bigger-120"></i>--%>
+                                    <%--                                                                        </a>--%>
 
-<%--                                                                        <button class="btn btn-xs btn-danger" title="Xóa tòa nhà"--%>
-<%--                                                                                onclick="deleteBuilding(${tableList.id})" id="btnDeleteBuilding">--%>
-<%--                                                                            <i class="ace-icon fa fa-trash-o bigger-120"></i>--%>
-<%--                                                                        </button>--%>
+                                    <%--                                                                        <button class="btn btn-xs btn-danger" title="Xóa tòa nhà"--%>
+                                    <%--                                                                                onclick="deleteBuilding(${tableList.id})" id="btnDeleteBuilding">--%>
+                                    <%--                                                                            <i class="ace-icon fa fa-trash-o bigger-120"></i>--%>
                                 </display:column>
                             </display:table>
                         </form:form>
@@ -301,10 +299,16 @@
 </div>
 
 <script>
+
     function assignmentBuilding(buildingId) {
         $('#assignmentBuildingModal').modal();
-        $('#buildingId').val();
+        $('#buildingId').val(buildingId); // Cập nhật giá trị buildingId
     }
+
+    // function assignmentBuilding(buildingId) {
+    //     $('#assignmentBuildingModal').modal();
+    //     $('#buildingId').val();
+    // }
 
     $('#btnAssignmentBuilding').click(function (e) {
         e.preventDefault();
@@ -342,121 +346,161 @@
     function loadResponseSearchDataFromTable(data) {
 
         let tableBody = $("#tableList tbody");
-        tableBody.empty(); // Xóa dữ liệu cũ
+        $("#tableList").find("tbody").empty();
 
         if (!data || data.length === 0) {
             tableBody.append(`<tr><td colspan="10" class="text-center">Không có dữ liệu</td></tr>`);
             return;
         }
 
+        console.log("Dữ liệu đầu vào:", data); // Kiểm tra dữ liệu
+
         for (let i = 0; i < data.length; i++) {
-            let building = data[i]; // Lấy từng phần tử trong mảng
+            let building = data[i];
             if (!building.id) {
                 console.error("Lỗi: ID tòa nhà không tồn tại!", building);
                 continue; // Bỏ qua nếu ID không hợp lệ
             }
 
-            let row = `
-            <tr id="row-${building.id}">
-                <td>` + building.name + `  </td>
-                <td>` + building.structure + `  </td>
-                <td>` + building.address + `  </td>
-                <td>` + building.numberOfBasement + `  </td>
-                <td>` + building.direction + `   </td>
-                <td>` + building.rentArea + `  </td>
-                <td>` + building.rentPrice + ` triệu/m²  </td>
-                <td>` + building.serviceFee + `  </td>
-                <td>` + building.brokerageFee + `  </td>
+            let row = '<tr id="row-' + building.id + '">' +
+                '<td>' + (building.name || '') + '</td>' +
+                '<td>' + (building.structure || '') + '</td>' +
+                '<td>' + (building.address || '') + '</td>' +
+                '<td>' + (building.numberOfBasement || '') + '</td>' +
+                '<td>' + (building.direction || '') + '</td>' +
+                '<td>' + (building.rentArea || '') + '</td>' +
+                '<td>' + (building.rentPrice || '') + ' triệu/m²</td>' +
+                '<td>' + (building.serviceFee || '') + '</td>' +
+                '<td>' + (building.brokerageFee || '') + '</td>' +
+                '<td class="col-actions">' +
+                '<a class="btn btn-xs btn-success" title="Giao tòa nhà" onclick="assignmentBuilding(' + building.id + ')">' +
+                '<i class="ace-icon glyphicon glyphicon-list"></i>' +
+                '</a>' +
+                '<a class="btn btn-xs btn-info" title="Sửa tòa nhà" href="/admin/building-edit-' + building.id + '">' +
+                '<i class="ace-icon fa fa-pencil bigger-120"></i>' +
+                '</a>' +
+                '<button class="btn btn-xs btn-danger delete-building" title="Xóa tòa nhà" data-id="' + building.id + '">' +
+                '<i class="ace-icon fa fa-trash-o bigger-120"></i>' +
+                '</button>' +
+                '</td>' +
+                '</tr>';
 
-                <td class="col-actions">
-                    <a class="btn btn-xs btn-success" title="Giao tòa nhà" onclick="assignmentBuilding(${building.id})">
-                        <i class="ace-icon glyphicon glyphicon-list"></i>
-                    </a>
-                    <a class="btn btn-xs btn-info" title="Sửa tòa nhà" href="/admin/building-edit-${building.id}">
-                        <i class="ace-icon fa fa-pencil bigger-120"></i>
-                    </a>
-                    <button class="btn btn-xs btn-danger" title="Xóa tòa nhà" onclick="deleteBuilding(${building.id})">
-                        <i class="ace-icon fa fa-trash-o bigger-120"></i>
-                    </button>
-                </td>
-            </tr>
-        `;
             tableBody.append(row);
         }
     }
 
+    $.ajax({
+        url: '/api/building',
+        method: 'GET',
+        success: function (data) {
+            // Thêm bảng nếu chưa có
+            if ($("#tableList").length === 0) {
+                $("body").append('<table id="tableList"><thead>...</thead><tbody></tbody></table>');
+            }
+            loadResponseSearchDataFromTable(data);
+        }
+    });
 
-    <%--function deleteBuilding(id) {--%>
+    // Gắn sự kiện và định nghĩa hàm xóa bên ngoài
+    $(document).ready(function () {
+        $("#tableList").on("click", ".delete-building", function () {
+            let buildingId = $(this).data("id"); // Cách 1
+            // let buildingId = $(this).attr("data-id"); // Cách 2: Sử dụng .attr() để kiểm tra
 
-    <%--console.log("🔹 ID nhận được khi bấm xóa:", id, typeof id); // Kiểm tra giá trị và kiểu dữ liệu của id--%>
-    <%--    if (!id || isNaN(id)) {--%>
-    <%--        alert("Lỗi: ID tòa nhà không hợp lệ!");--%>
-    <%--        return;--%>
+            if (!buildingId) {
+                console.error("Không lấy được buildingId từ data-id", $(this));
+                return;
+            }
+
+            console.log("ID của tòa nhà cần xóa: " + buildingId);
+            deleteBuilding(buildingId);
+        });
+    });
+
+
+    function deleteBuilding(id) {
+        console.log("Đang xóa tòa nhà có ID: " + id);
+        if (confirm("Bạn có chắc muốn xóa tòa nhà này?")) {
+            $.ajax({
+                url: '/api/building/' + id,
+                type: 'DELETE',
+                success: function (response) {
+                    $("#row-" + id).remove(); // Xóa row khỏi bảng
+                    console.log("Xóa thành công!");
+                },
+                error: function (err) {
+                    console.error("Lỗi khi xóa: ", err);
+                }
+            });
+        }
+    }
+
+    <%--    function deleteBuilding(buildingId) {--%>
+
+
+    <%--    if (confirm("Bạn có chắc chắn muốn xóa tòa nhà này không?")) {--%>
+
+    <%--        $.ajax({--%>
+    <%--            type: "DELETE",--%>
+    <%--            url: `http://localhost:8081/api/${buildingId}`,--%>
+    <%--            success: function (response) {--%>
+    <%--                loadResponseSearchDataFromTable(response);--%>
+    <%--                $(`#row-${buildingId}`).remove(); // Sửa lỗi building.id--%>
+    <%--                alert("Xóa tòa nhà thành công!");--%>
+    <%--            },--%>
+    <%--            error: function (error) {--%>
+    <%--console.error("Lỗi khi xóa tòa nhà:", error);--%>
+    <%--                alert("Có lỗi xảy ra khi xóa tòa nhà.");            }--%>
+    <%--        });--%>
+
+
+    <%--$.ajax({--%>
+    <%--    type: "DELETE",--%>
+    <%--    url: `/api/building/${buildingId}`,  // Sửa lỗi building.id--%>
+    <%--    success: function(response) {--%>
+    <%--        // Xóa dòng tương ứng trong bảng--%>
+    <%--        $(`#row-${buildingId}`).remove(); // Sửa lỗi building.id--%>
+    <%--        alert("Xóa tòa nhà thành công!");--%>
+    <%--    },--%>
+    <%--    error: function(error) {--%>
+    <%--        console.error("Lỗi khi xóa tòa nhà:", error);--%>
+    <%--        alert("Có lỗi xảy ra khi xóa tòa nhà.");--%>
     <%--    }--%>
-
-
-    <%--    if (!confirm("Bạn có chắc chắn muốn xóa tòa nhà này?")) {--%>
-    <%--        return;--%>
-    <%--    }--%>
-
-    <%--    $.ajax({--%>
-    <%--        type: "DELETE",--%>
-    <%--        url: `http://localhost:8081/api/building/${id}`, // API Backend--%>
-    <%--        contentType: "application/json",--%>
-    <%--        success: function (response) {--%>
-    <%--            alert("Xóa thành công!");--%>
-    <%--            $("#row-" + id).remove(); // Xóa dòng khỏi bảng nếu thành công--%>
-    <%--        },--%>
-    <%--        error: function (error) {--%>
-    <%--            console.error("Lỗi khi xóa tòa nhà:", error);--%>
-    <%--            alert("Không thể xóa tòa nhà. Vui lòng thử lại!");--%>
-    <%--        }--%>
-    <%--    });--%>
-    <%--}--%>
-
-//     function deleteBuilding(id) {
-//     if (!confirm("Bạn có chắc muốn xóa không?")) return;
-//
-//     console.log("ID cần xóa:", id); // Kiểm tra ID có giá trị không
-//
-//     $.ajax({
-//         url: "/api/building/delete/" + id,
-//         type: "DELETE",
-//         success: function (response) {
-//             alert("Xóa thành công!");
-//             location.reload();
-//         },
-//         error: function (xhr, status, error) {
-//             console.log("Lỗi AJAX:", status, error);
-//             console.log("Chi tiết lỗi:", xhr.responseText);
-//             alert("Có lỗi xảy ra, không thể xóa!");
-//         }
-//     });
-// }
-
-
-
-
-    // Xóa tòa nhà
-    // $(".btnDeleteBuilding").click(function () {
-    //     let buildingId = $(this).data("id");
-    //     if (confirm("Bạn có chắc chắn muốn xóa?")) {
-    //         $.ajax({
-    //             url: buildingAPI + "/" + buildingId,
-    //             type: "DELETE",
-    //             success: function () {
-    //                 alert("Xóa thành công!");
-    //                 location.reload();
-    //             },
-    //             error: function (error) {
-    //                 alert("Lỗi khi xóa: " + error.responseText);
-    //             }
-    //         });
+    <%--});--%>
     //     }
+    // }
+
+    // Lắng nghe sự kiện click trên nút delete
+    // $(document).on('click', '.delete-building', function() {
+    //     const buildingId = $(this).data('id'); // Lấy ID từ data-id
+    //     console.log(buildingId);
+    //     deleteBuilding(buildingId); // Truyền ID vào hàm
     // });
 
 
-
+    //     function deleteBuilding(buildingId) {
+    //     if (confirm("Bạn có chắc chắn muốn xóa tòa nhà này không?")) {
+    //         $.ajax({
+    //             type: "DELETE",
+    //             url: `/api/building/9`,
+    //             success: function(response) {
+    //                 // Xóa dòng tương ứng trong bảng
+    //                 $(`#row-9`).remove();
+    //                 alert("Xóa tòa nhà thành công!");
+    //             },
+    //             error: function(error) {
+    //                 console.error("Lỗi khi xóa tòa nhà:", error);
+    //                 alert("Có lỗi xảy ra khi xóa tòa nhà.");
+    //             }
+    //         });
+    //     }
+    // }
+    //
+    // $(document).on('click', '.delete-building', function() {
+    //     const buildingId = $(this).data('id');
+    //     // Gọi hàm xóa tòa nhà
+    //     deleteBuilding(buildingId);
+    // });
 
 
 </script>
