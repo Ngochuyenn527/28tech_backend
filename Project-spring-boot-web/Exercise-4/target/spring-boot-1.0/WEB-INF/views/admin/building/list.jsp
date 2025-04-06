@@ -207,8 +207,6 @@
                                            export="false"
                                            class="table table-fcv-ace table-striped table-bordered table-hover dataTable no-footer"
                                            style="margin: 3em 0 1.5em;">
-
-
                                 <display:column headerClass="text-left" property="name" title="Tên tòa nhà"/>
                                 <display:column headerClass="text-left" property="structure" title="Cấu trúc"/>
                                 <display:column headerClass="text-left" property="address"
@@ -311,13 +309,12 @@
 
     $('#btnSearchBuilding').click(function (e) {
         e.preventDefault();
-
         // Lấy dữ liệu từ form và chuyển thành object
         var formData = $('#listForm').serialize();
 
         $.ajax({
             type: "GET",
-            url: "http://localhost:8081/api/building",
+            url: "${buildingAPI}",
             data: formData, // Truyền trực tiếp dữ liệu form
             success: function (response) {
                 console.log("Danh sách tòa nhà:", response);
@@ -404,6 +401,7 @@
                 type: 'GET',
                 success: function (data) {
                     // Điền dữ liệu vào form
+                    $("#id").val(data.id);
                     $("#name").val(data.name);
                     $("#structure").val(data.structure);
                     $("#district").val(data.district);
@@ -411,7 +409,6 @@
                     $("#street").val(data.street);
                     $("#numberOfBasement").val(data.numberOfBasement);
                     $("#direction").val(data.direction);
-                    // Xử lý rentArea
                     $("#rentArea").val(data.rentArea || '');
                     $("#rentPrice").val(data.rentPrice);
                     $("#serviceFee").val(data.serviceFee);
@@ -420,17 +417,12 @@
                     $("#depositFee").val(data.deposit);
                     $("#brokerageFee").val(data.brokerageFee);
 
-                    // Cập nhật typeCode (checkbox)
-                    // $("input[name='typeCode']").prop("checked", false);
-                    // data.typeCode.forEach(code => {
-                    //     $("input[name='typeCode'][value='" + code + "']").prop("checked", true);
-                    // });
                     // Điền typeCode
-                if (data.typeCode && Array.isArray(data.typeCode)) {
-                    data.typeCode.forEach(type => {
-                        $(`input[name='typeCode'][value='${typeCodes}']`).prop('checked', true);
-                    });
-                }
+                    if (data.typeCode && Array.isArray(data.typeCode)) {
+                        data.typeCode.forEach(type => {
+                            $(`input[name='typeCode'][value='${typeCodes}']`).prop('checked', true);
+                        });
+                    }
 
                 },
                 error: function (err) {
@@ -461,14 +453,14 @@
         console.log("Đang xóa tòa nhà có ID: " + id);
         if (confirm("Bạn có chắc chắn muốn xóa tòa nhà này không?")) {
             $.ajax({
-                url: '/api/building/' + id,
+                url: "${buildingAPI}" + "/" + id,
                 type: 'DELETE',
                 success: function (response) {
                     // Xóa dòng tương ứng trong bảng
                     $("#row-" + id).remove();
                     alert("Xóa tòa nhà thành công!");
 
-                    console.log("Xóa thành công!");
+                    console.log("Xóa thành công!", response);
                 },
                 error: function (err) {
                     console.error("Lỗi khi xóa: ", err);
