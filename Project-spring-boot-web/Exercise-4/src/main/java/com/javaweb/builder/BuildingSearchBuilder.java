@@ -2,6 +2,7 @@ package com.javaweb.builder;
 
 import java.util.List;
 
+//chứa các field giống với BuildingSearchRequest
 public class BuildingSearchBuilder {
 
     private String name;

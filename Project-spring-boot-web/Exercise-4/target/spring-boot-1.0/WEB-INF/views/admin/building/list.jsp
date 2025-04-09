@@ -232,79 +232,7 @@
 </div><!-- /.main-container -->
 
 
-<!-- giao tòa nhà -->
-<div class="modal fade" id="assignmentBuildingModal" role="dialog"
-     style="font-family: 'Times New Roman', Times, serif;">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Giao tòa nhà cho nhân viên</h4>
-            </div>
-            <div class="modal-body">
-                <table id="staffList" class="table table-striped table-bordered table-hover">
-                    <thead>
-                    <tr>
-                        <th class="center">
-                            Chọn
-                        </th>
-                        <th class="center">Tên nhân viên</th>
-                    </tr>
-                    </thead>
-
-                    <tbody class="center">
-                    <tr>
-                        <td>
-                            <input type="checkbox" id="checkbox_1" value="1">
-                        </td>
-                        <td>Nguyễn Văn A</td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <input type="checkbox" id="checkbox_2" value="2">
-                        </td>
-                        <td>Nguyễn Văn B</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <input type="hidden" id="buildingId" name="buildingId" value="1">
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="btnAssignmentBuilding" data-dismiss="modal">Giao
-                    tòa nhà
-                </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-
 <script>
-
-    function assignmentBuilding(buildingId) {
-        $('#assignmentBuildingModal').modal();
-        $('#buildingId').val(buildingId); // Cập nhật giá trị buildingId
-    }
-
-    // function assignmentBuilding(buildingId) {
-    //     $('#assignmentBuildingModal').modal();
-    //     $('#buildingId').val();
-    // }
-
-    $('#btnAssignmentBuilding').click(function (e) {
-        e.preventDefault();
-        var data = {}; // có cấu trúc của json
-        data['buildingId'] = $('#buildingId').val();
-        var staffs = $('#staffList').find('tbody input[type = checkbox]:checked').map(function () {
-            return $(this).val();
-        }).get();
-        data['staff'] = staffs;
-        console.log("OK");
-    })
 
 
     $('#btnSearchBuilding').click(function (e) {
@@ -357,9 +285,6 @@
                 '<td>' + (building.serviceFee || '') + '</td>' +
                 '<td>' + (building.brokerageFee || '') + '</td>' +
                 '<td class="col-actions">' +
-                '<a class="btn btn-xs btn-success" title="Giao tòa nhà" onclick="assignmentBuilding(' + building.id + ')">' +
-                '<i class="ace-icon glyphicon glyphicon-list"></i>' +
-                '</a>' +
                 '<a class="btn btn-xs btn-info edit-building" title="Sửa tòa nhà" href="/admin/building-edit-' + building.id + '">' +
                 '<i class="ace-icon fa fa-pencil bigger-120"></i>' +
                 '</a>' +
